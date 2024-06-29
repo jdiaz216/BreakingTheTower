@@ -5,6 +5,8 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -30,9 +32,9 @@ public class Bitmaps
 
     public void loadAll() throws IOException
     {
-        logo = ImageIO.read(Bitmaps.class.getResource("/logo.gif"));
-        wonScreen = ImageIO.read(Bitmaps.class.getResource("/winscreen.gif"));
-        BufferedImage src = ImageIO.read(Bitmaps.class.getResource("/sheet.gif"));
+        logo = ImageIO.read(new FileInputStream("res/logo.gif"));
+        wonScreen = ImageIO.read(new FileInputStream("res/winscreen.gif"));
+        BufferedImage src = ImageIO.read(new FileInputStream("res/sheet.gif"));
         trees = new BufferedImage[16];
         for (int i=0; i<16; i++)
             trees[i] = clip(src, 32+i*8, 0, 8, 16);
@@ -79,7 +81,7 @@ public class Bitmaps
         
         island = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
         int[] pixels = new int[256*256];
-        ImageIO.read(Bitmaps.class.getResource("/island.gif")).getRGB(0, 0, 256, 256, pixels, 0, 256);
+        ImageIO.read(new FileInputStream("res/island.gif")).getRGB(0, 0, 256, 256, pixels, 0, 256);
         island.setRGB(0, 0, 256, 256, pixels, 0, 256);
     }
 
