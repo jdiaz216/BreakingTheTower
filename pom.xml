@@ -12,5 +12,71 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>hello2morrow.maven.repository</id>
+            <url>https://maven.hello2morrow.com/repository</url>
+        </pluginRepository>
+    </pluginRepositories>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.10.0.2594</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.11</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>com.hello2morrow</groupId>
+                <artifactId>sonargraph-maven-plugin</artifactId>
+                <version>13.5.2</version>
+                <configuration>
+                    <systemBaseDirectory>${basedir}/breaking-the-tower.sonargraph</systemBaseDirectory>
+                    <autoUpdate>true</autoUpdate>
+                    <failSet>
+                        <failOnEmptyWorkspace>true</failOnEmptyWorkspace>
+                        <includes>
+                            <include>
+                                <issueType>ArchitectureViolation</issueType>
+                            </include>
+                            <include>
+                                <issueType>any</issueType>
+                                <severity>error</severity>
+                            </include>
+                        </includes>
+                        <excludes>
+                            <exclude>
+                                <issueType>ScriptCompilationError</issueType>
+                                <resolution>none</resolution>
+                            </exclude>
+                        </excludes>
+                    </failSet>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create-report</goal>
+                            <goal>dynamic-report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
     
 </project>
