@@ -116,6 +116,7 @@ public class Bitmaps
         }
         catch (Exception e)
         {
+            LOGGER.log(Level.WARNING, "Failed to create compatible image, falling back to default", e);
         }
 
         if (newImage == null)
