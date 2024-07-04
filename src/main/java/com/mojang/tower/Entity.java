@@ -13,7 +13,7 @@ public class Entity implements Comparable<Entity>
 
     protected Island island;
     protected Bitmaps bitmaps;
-    protected Random random = new Random();
+    protected Random random;
     protected boolean alive = true;
 
     public Entity(double x, double y, double r)
@@ -21,6 +21,7 @@ public class Entity implements Comparable<Entity>
         this.x = x;
         this.y = y;
         this.r = r;
+        this.random = new Random();
     }
 
     public void updatePos(double sin, double cos, double alpha)
@@ -37,7 +38,6 @@ public class Entity implements Comparable<Entity>
 
     public void tick()
     {
-        // To be implemented by subclasses
     }
 
     public boolean isAlive()
@@ -66,7 +66,6 @@ public class Entity implements Comparable<Entity>
 
     public void render(Graphics2D g, double alpha)
     {
-        // To be implemented by subclasses
     }
 
     public double distance(Entity e)
@@ -78,22 +77,22 @@ public class Entity implements Comparable<Entity>
 
     public boolean givesResource(int resourceId)
     {
-        return false; // Default implementation, to be overridden by subclasses
+        return false;
     }
 
     public boolean gatherResource(int resourceId)
     {
-        return false; // Default implementation, to be overridden by subclasses
+        return false;
     }
 
     public boolean acceptsResource(int resourceId)
     {
-        return false; // Default implementation, to be overridden by subclasses
+        return false;
     }
 
     public boolean submitResource(int resourceId)
     {
-        return false; // Default implementation, to be overridden by subclasses
+        return false;
     }
     
     public Entity getRandomTarget(double radius, double rnd, TargetFilter filter)
@@ -111,6 +110,5 @@ public class Entity implements Comparable<Entity>
 
     public void fight(Monster monster)
     {
-         // To be implemented by subclasses
     }
 }
