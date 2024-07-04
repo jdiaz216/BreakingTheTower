@@ -3,6 +3,9 @@ package com.mojang.tower;
 import java.awt.Graphics2D;
 import java.util.Random;
 
+/**
+ * Represents an entity in the game with position and collision properties.
+ */
 public class Entity implements Comparable<Entity>
 {
     public double x, y, r;
@@ -34,6 +37,7 @@ public class Entity implements Comparable<Entity>
 
     public void tick()
     {
+        // To be implemented by subclasses
     }
 
     public boolean isAlive()
@@ -62,6 +66,7 @@ public class Entity implements Comparable<Entity>
 
     public void render(Graphics2D g, double alpha)
     {
+        // To be implemented by subclasses
     }
 
     public double distance(Entity e)
@@ -73,22 +78,22 @@ public class Entity implements Comparable<Entity>
 
     public boolean givesResource(int resourceId)
     {
-        return false;
+        return false; // Default implementation, to be overridden by subclasses
     }
 
     public boolean gatherResource(int resourceId)
     {
-        return false;
+        return false; // Default implementation, to be overridden by subclasses
     }
 
     public boolean acceptsResource(int resourceId)
     {
-        return false;
+        return false; // Default implementation, to be overridden by subclasses
     }
 
     public boolean submitResource(int resourceId)
     {
-        return false;
+        return false; // Default implementation, to be overridden by subclasses
     }
     
     public Entity getRandomTarget(double radius, double rnd, TargetFilter filter)
@@ -106,5 +111,6 @@ public class Entity implements Comparable<Entity>
 
     public void fight(Monster monster)
     {
+         // To be implemented by subclasses
     }
 }
