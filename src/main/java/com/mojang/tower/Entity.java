@@ -3,6 +3,9 @@ package com.mojang.tower;
 import java.awt.Graphics2D;
 import java.util.Random;
 
+/**
+ * Represents an entity in the game with position and collision properties.
+ */
 public class Entity implements Comparable<Entity>
 {
     public double x, y, r;
@@ -10,7 +13,7 @@ public class Entity implements Comparable<Entity>
 
     protected Island island;
     protected Bitmaps bitmaps;
-    protected Random random = new Random();
+    protected Random random;
     protected boolean alive = true;
 
     public Entity(double x, double y, double r)
@@ -18,6 +21,7 @@ public class Entity implements Comparable<Entity>
         this.x = x;
         this.y = y;
         this.r = r;
+        this.random = new Random();
     }
 
     public void updatePos(double sin, double cos, double alpha)
