@@ -1,5 +1,7 @@
 package com.mojang.tower;
 
+import com.mojang.tower.ui.TowerComponent;
+
 import java.awt.image.*;
 import java.util.*;
 

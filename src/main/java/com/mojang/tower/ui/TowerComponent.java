@@ -1,4 +1,13 @@
-package com.mojang.tower;
+package com.mojang.tower.ui;
+
+import com.mojang.tower.Bitmaps;
+import com.mojang.tower.Entity;
+import com.mojang.tower.House;
+import com.mojang.tower.HouseType;
+import com.mojang.tower.Island;
+import com.mojang.tower.Sound;
+import com.mojang.tower.Sounds;
+import com.mojang.tower.TargetFilter;
 
 import java.awt.*;
 import java.awt.event.*;
