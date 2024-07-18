@@ -30,7 +30,7 @@ public class FarmPlot extends Entity
         int x = (int) (xr - 4);
         int y = -(int) (yr / 2 + 5);
 
-        g.drawImage(bitmaps.farmPlots[7 - age / GROW_SPEED], x, y, null);
+        g.drawImage(bitmaps.getFarmPlots()[7 - age / GROW_SPEED], x, y, null);
     }
 
     public void cut()

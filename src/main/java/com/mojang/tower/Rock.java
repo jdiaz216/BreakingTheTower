@@ -23,7 +23,7 @@ public class Rock extends Entity
         int x = (int) (xr - 4);
         int y = -(int) (yr / 2 + 8-2);
 
-        g.drawImage(bitmaps.rocks[type], x, y, null);
+        g.drawImage(bitmaps.getRocks()[type], x, y, null);
     }
     
     public boolean gatherResource(int resourceId)

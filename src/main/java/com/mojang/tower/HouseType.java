@@ -15,11 +15,11 @@ public class HouseType
     public static final HouseType BARRACKS = new HouseType(3, "Barracks", 10, 15, 50, 0);
     public static final HouseType RESIDENCE = new HouseType(4, "Residence", 10, 30, 30, 30);
 
-    public final int image;
-    public final int radius;
-    public final String name;
-    public final int wood, rock, food;
-    public int acceptResource = -1;
+    private final int image;
+    private final int radius;
+    private final String name;
+    private final int wood, rock, food;
+    private int acceptResource = -1;
 
     private static int id = 0;
 
@@ -42,7 +42,7 @@ public class HouseType
 
     public BufferedImage getImage(Bitmaps bitmaps)
     {
-        return bitmaps.houses[image % 2 + 1][image / 2];
+        return bitmaps.getHouses()[image % 2 + 1][image / 2];
     }
 
     public String getString()
@@ -67,5 +67,29 @@ public class HouseType
         if (this == RESIDENCE) return "Produces peons for 5 food each";
 
         return "**unknown**";
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getWood() {
+        return wood;
+    }
+
+    public int getRock() {
+        return rock;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public int getAcceptResource() {
+        return acceptResource;
     }
 }

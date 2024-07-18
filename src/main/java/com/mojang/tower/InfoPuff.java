@@ -10,10 +10,10 @@ public class InfoPuff extends Entity
         yr-=2;
     }
 
-    public double xa, ya, za;
-    public double z = 0;
-    public int life;
-    public int lifeTime;
+    private double xa, ya, za;
+    private double z = 0;
+    private int life;
+    private int lifeTime;
     private int image;
 
     public InfoPuff(double x, double y, int image)
@@ -43,6 +43,6 @@ public class InfoPuff extends Entity
         int x = (int) (xr - 8);
         int y = -(int) (yr / 2 + 4 + (z + za * alpha));
 
-            g.drawImage(bitmaps.infoPuffs[image], x, y, null);
+            g.drawImage(bitmaps.getInfoPuffs()[image], x, y, null);
     }
 }
