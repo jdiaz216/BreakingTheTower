@@ -108,7 +108,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             e.printStackTrace();
         }
 
-        island = new Island(this, bitmaps.island);
+        island = new Island(this, bitmaps.getIsland());
     }
 
     public void run()
@@ -176,7 +176,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             }
         }
 
-        island.rot = xRot;
+        island.setRot(xRot);
 
         tickCount++;
         if (tickCount % TICKS_PER_SECOND == 0)
@@ -252,13 +252,13 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         double sin = Math.sin(rot);
         double cos = Math.cos(rot);
 
-        for (int i = 0; i < island.entities.size(); i++)
+        for (int i = 0; i < island.getEntities().size(); i++)
         {
-            Entity e = island.entities.get(i);
+            Entity e = island.getEntities().get(i);
             e.updatePos(sin, cos, alpha);
         }
 
-        Collections.sort(island.entities);
+        Collections.sort(island.getEntities());
 
         AffineTransform af = g.getTransform();
         g.translate(xCenter, yCenter);
@@ -266,13 +266,13 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         g.scale(1, 0.5);
         g.rotate(-rot);
         g.translate(-128, -128);
-        g.drawImage(bitmaps.island, 0, 0, null);
+        g.drawImage(bitmaps.getIsland(), 0, 0, null);
         g.setTransform(af);
 
         g.translate(xCenter, yCenter);
 
-        for (int i = 0; i < island.entities.size(); i++)
-            island.entities.get(i).render(g, alpha);
+        for (int i = 0; i < island.getEntities().size(); i++)
+            island.getEntities().get(i).render(g, alpha);
 
         if (!titleScreen && !won)
         {
@@ -296,7 +296,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
                 if (e != null)
                 {
-                    g.drawImage(bitmaps.delete, xMouse / 2 - xCenter - 8, yMouse / 2 - yCenter - 11, null);
+                    g.drawImage(bitmaps.getDelete(), xMouse / 2 - xCenter - 8, yMouse / 2 - yCenter - 11, null);
                 }
             }
         }
@@ -306,7 +306,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
         if (titleScreen)
         {
-            g.drawImage(bitmaps.logo, (width - bitmaps.logo.getWidth()) / 2, 16, null);
+            g.drawImage(bitmaps.getLogo(), (width - bitmaps.getLogo().getWidth()) / 2, 16, null);
 
             FontMetrics fm = g.getFontMetrics();
             g.setColor(new Color(0x000000));
@@ -323,7 +323,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         }
         else if (won)
         {
-            g.drawImage(bitmaps.wonScreen, (width - bitmaps.logo.getWidth()) / 2, 16, null);
+            g.drawImage(bitmaps.getWonScreen(), (width - bitmaps.getLogo().getWidth()) / 2, 16, null);
             FontMetrics fm = g.getFontMetrics();
             g.setColor(new Color(0x000000));
             for (int i = 0; i < 2; i++)
@@ -350,7 +350,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
                 int y = 4;
                 if (i == -1)
                 {
-                    g.drawImage(bitmaps.delete, x, y, null);
+                    g.drawImage(bitmaps.getDelete(), x, y, null);
                 }
                 else
                 {
@@ -388,13 +388,13 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
                 }
 
                 String tmp = "Wood: 9999";
-                g.drawString("Wood: " + island.resources.wood, width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 0);
-                g.drawString("Rock: " + island.resources.rock, width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 1);
-                g.drawString("Food: " + island.resources.food, width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 2);
+                g.drawString("Wood: " + island.getResources().getWood(), width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 0);
+                g.drawString("Rock: " + island.getResources().getRock(), width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 1);
+                g.drawString("Food: " + island.getResources().getFood(), width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 2);
 
-                String pop = "Population: " + island.population + " / " + island.populationCap;
+                String pop = "Population: " + island.getPopulation() + " / " + island.getPopulationCap();
                 g.drawString(pop, 4 - i, 12 - i + 11 * 1);
-                pop = "Warriors: " + island.warriorPopulation + " / " + island.warriorPopulationCap;
+                pop = "Warriors: " + island.getWarriorPopulation() + " / " + island.getWarriorPopulationCap();
                 g.drawString(pop, 4 - i, 12 - i + 11 * 2);
 
                 g.drawString("Time: " + timeStr, 4 - i, 12 - i + 11 * 0);
@@ -402,7 +402,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             }
         }
         
-        g.drawImage(bitmaps.soundButtons[Sounds.isMute()?1:0], width-20, height-20, null);
+        g.drawImage(bitmaps.getSoundButtons()[Sounds.isMute()?1:0], width-20, height-20, null);
     }
 
     public void mouseClicked(MouseEvent me)

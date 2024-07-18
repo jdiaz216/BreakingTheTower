@@ -10,10 +10,10 @@ public class Puff extends Entity
         yr-=2;
     }
 
-    public double xa, ya, za;
-    public double z = 0;
-    public int life;
-    public int lifeTime;
+    private double xa, ya, za;
+    private double z = 0;
+    private int life;
+    private int lifeTime;
 
     public Puff(double x, double y)
     {
@@ -44,6 +44,6 @@ public class Puff extends Entity
 
         int age = life*6/lifeTime;
         if (age<=4)
-            g.drawImage(bitmaps.smoke[age], x, y, null);
+            g.drawImage(bitmaps.getSmoke()[age], x, y, null);
     }
 }

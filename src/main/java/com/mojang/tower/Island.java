@@ -8,24 +8,23 @@ import java.util.*;
 public class Island
 {
     private TowerComponent tower;
-    public BufferedImage image;
+    private BufferedImage image;
     private int[] pixels;
 
-    List<Entity> entities = new ArrayList<Entity>();
+    private List<Entity> entities = new ArrayList<Entity>();
     private Random random = new Random(8844);
 
-    public Resources resources = new Resources();
+    private Resources resources = new Resources();
 
-    public double rot;
-    public int population = 0;
-    public int populationCap = 10;
-    public int monsterPopulation = 0;
+    private double rot;
+    private int population = 0;
+    private int populationCap = 10;
+    private int monsterPopulation = 0;
 
-    public int warriorPopulation = 0;
-    public int warriorPopulationCap = 0;
+    private int warriorPopulation = 0;
+    private int warriorPopulationCap = 0;
 
-    public Island(TowerComponent tower, BufferedImage image)
-    {
+    public Island(TowerComponent tower, BufferedImage image) {
         this.tower = tower;
         this.image = image;
 
@@ -247,5 +246,97 @@ public class Island
     public void win()
     {
         tower.win();
+    }
+
+    public TowerComponent getTower() {
+        return tower;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public int[] getPixels() {
+        return pixels;
+    }
+
+    public List<Entity> getEntities() {
+        return entities;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public Resources getResources() {
+        return resources;
+    }
+
+    public double getRot() {
+        return rot;
+    }
+
+    public void setRot(double rot) {
+        this.rot = rot;
+    }
+
+    public int getPopulation() {
+        return population;
+    }
+
+    public int getPopulationCap() {
+        return populationCap;
+    }
+
+    public int getMonsterPopulation() {
+        return monsterPopulation;
+    }
+
+    public int getWarriorPopulation() {
+        return warriorPopulation;
+    }
+
+    public void setWarriorPopulation(int warriorPopulation) {
+        this.warriorPopulation = warriorPopulation;
+    }
+
+    public int getWarriorPopulationCap() {
+        return warriorPopulationCap;
+    }
+
+    public void increasePopulation() {
+        population++;
+    }
+
+    public void decreasePopulation() {
+        population--;
+    }
+
+    public void decreaseWarriorPopulation() {
+        warriorPopulation--;
+    }
+
+    public void increaseMonsterPopulation() {
+        monsterPopulation++;
+    }
+
+    public void decreaseMonsterPopulation() {
+        monsterPopulation--;
+    }
+
+    public void decreasePopulationCap(int amount) {
+        populationCap -= amount;
+    }
+
+    public void decreaseWarriorPopulationCap(int amount) {
+        warriorPopulationCap -= amount;
+    }
+
+    public void increasePopulationCap(int amount) {
+        populationCap += amount;
+    }
+
+    public void increaseWarriorPopulationCap(int amount) {
+        warriorPopulationCap += amount;
     }
 }

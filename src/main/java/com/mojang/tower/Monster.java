@@ -7,8 +7,8 @@ public class Monster extends Entity
 {
     private static final int[] animSteps = { 0, 1, 0, 2 };
     private static final int[] animDirs = { 2, 0, 3, 1 };
-    public double rot = 0;
-    public double moveTick = 0;
+    private double rot = 0;
+    private double moveTick = 0;
     private int wanderTime = 0;
 
     protected Entity target;
@@ -25,13 +25,13 @@ public class Monster extends Entity
     public void init(Island island, Bitmaps bitmaps)
     {
         super.init(island, bitmaps);
-        island.monsterPopulation++;
+        island.increaseMonsterPopulation();
     }
 
     public void die()
     {
         Sounds.play(new Sound.MonsterDeath());
-        island.monsterPopulation--;
+        island.decreaseMonsterPopulation();
         alive = false;
     }
 
@@ -99,12 +99,12 @@ public class Monster extends Entity
 
     public void render(Graphics2D g, double alpha)
     {
-        int rotStep = (int) Math.floor((rot - island.rot) * 4 / (Math.PI * 2) + 0.5);
+        int rotStep = (int) Math.floor((rot - island.getRot()) * 4 / (Math.PI * 2) + 0.5);
         int animStep = animSteps[(int) (moveTick / 4) & 3];
 
         int x = (int) (xr - 4);
         int y = -(int) (yr / 2 + 8);
-        g.drawImage(bitmaps.peons[3][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
+        g.drawImage(bitmaps.getPeons()[3][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
 
         if (hp < maxHp)
         {

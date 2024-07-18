@@ -18,7 +18,7 @@ public class Tower extends Entity
 
     public void tick()
     {
-        if (random.nextInt(100) == 0 && island.monsterPopulation < minMonsters)
+        if (random.nextInt(100) == 0 && island.getMonsterPopulation() < minMonsters)
         {
             double xt = x + (random.nextDouble() * 2 - 1) * (r + 5);
             double yt = y + (random.nextDouble() * 2 - 1) * (r + 5);
@@ -38,11 +38,11 @@ public class Tower extends Entity
 
         for (int i = 0; i < h / 8; i++)
         {
-            g.drawImage(bitmaps.towerMid, x, y - 8 - i * 8, null);
+            g.drawImage(bitmaps.getTowerMid(), x, y - 8 - i * 8, null);
         }
-        g.drawImage(bitmaps.towerMid, x, y - h - 1, null);
-        g.drawImage(bitmaps.towerBot, x, y, null);
-        g.drawImage(bitmaps.towerTop, x, y - h - 8, null);
+        g.drawImage(bitmaps.getTowerMid(), x, y - h - 1, null);
+        g.drawImage(bitmaps.getTowerBot(), x, y, null);
+        g.drawImage(bitmaps.getTowerTop(), x, y - h - 8, null);
     }
 
     public boolean gatherResource(int resourceId)

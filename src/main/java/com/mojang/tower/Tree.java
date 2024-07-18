@@ -43,7 +43,7 @@ public class Tree extends Entity
         int x = (int) (xr - 4);
         int y = -(int) (yr / 2 + 16);
 
-        g.drawImage(bitmaps.trees[15 - age / GROW_SPEED], x, y, null);
+        g.drawImage(bitmaps.getTrees()[15 - age / GROW_SPEED], x, y, null);
     }
 
     public void cut()
