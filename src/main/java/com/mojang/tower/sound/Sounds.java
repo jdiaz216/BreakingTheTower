@@ -1,4 +1,4 @@
-package com.mojang.tower;
+package com.mojang.tower.sound;
 
 import java.util.ArrayList;
 import java.util.List;

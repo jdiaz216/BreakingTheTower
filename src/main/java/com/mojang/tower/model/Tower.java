@@ -1,4 +1,6 @@
-package com.mojang.tower;
+package com.mojang.tower.model;
+
+import com.mojang.tower.data.Resources;
 
 import java.awt.Graphics2D;
 

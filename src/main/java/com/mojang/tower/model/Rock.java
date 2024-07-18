@@ -1,4 +1,6 @@
-package com.mojang.tower;
+package com.mojang.tower.model;
+
+import com.mojang.tower.data.Resources;
 
 import java.awt.Graphics2D;
 
@@ -40,7 +42,7 @@ public class Rock extends Entity
     
     public boolean givesResource(int resourceId)
     {
-        return resourceId==Resources.ROCK;
+        return resourceId== Resources.ROCK;
     }
     
 }

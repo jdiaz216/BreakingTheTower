@@ -1,4 +1,10 @@
-package com.mojang.tower;
+package com.mojang.tower.model;
+
+import com.mojang.tower.gameplay.Job;
+import com.mojang.tower.data.Resources;
+import com.mojang.tower.sound.Sound;
+import com.mojang.tower.sound.Sounds;
+import com.mojang.tower.gameplay.TargetFilter;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -185,7 +191,7 @@ public class House extends Entity
                 double yt = y + (random.nextDouble() * 2 - 1) * 9;
 
                 peon = new Peon(xt, yt, 0);
-                if (island.isFree(peon.x, peon.y, peon.r))
+                if (island.isFree(peon.getX(), peon.getY(), peon.getR()))
                 {
                     puff();
                     island.getResources().decreaseFood(FOOD_PER_PEON);
@@ -234,7 +240,7 @@ public class House extends Entity
         int yPos = calculateYPosition();
 
         if (buildTime < buildDuration) {
-            g.drawImage(bitmaps.houses[0][buildTime * 6 / buildDuration], xPos, yPos, null);
+            g.drawImage(bitmaps.getHouses()[0][buildTime * 6 / buildDuration], xPos, yPos, null);
         }
         else {
             g.drawImage(type.getImage(bitmaps), xPos, yPos, null);

@@ -1,4 +1,6 @@
-package com.mojang.tower;
+package com.mojang.tower.model;
+
+import com.mojang.tower.data.Resources;
 
 import java.awt.Graphics2D;
 
@@ -43,7 +45,7 @@ public class FarmPlot extends Entity
         int yPos = -(int) (yr / 2 + Y_POSITION_ADJUSTMENT);
 
         int imageIndex = Math.max(0, 7 - age / GROW_SPEED);
-        g.drawImage(bitmaps.farmPlots[imageIndex], xPos, yPos, null);
+        g.drawImage(bitmaps.getFarmPlots()[imageIndex], xPos, yPos, null);
     }
 
     public void cut()

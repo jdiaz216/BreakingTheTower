@@ -1,4 +1,10 @@
-package com.mojang.tower;
+package com.mojang.tower.model;
+
+import com.mojang.tower.data.Resources;
+import com.mojang.tower.sound.Sound;
+import com.mojang.tower.sound.Sounds;
+import com.mojang.tower.gameplay.TargetFilter;
+import com.mojang.tower.ui.TowerComponent;
 
 import java.awt.image.*;
 import java.util.*;
@@ -106,7 +112,7 @@ public class Island
 
     public void addEntity(Entity entity)
     {
-        entity.init(this, tower.bitmaps);
+        entity.init(this, tower.getBitmaps());
         entities.add(entity);
         entity.tick();
     }

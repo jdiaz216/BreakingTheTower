@@ -1,4 +1,6 @@
-package com.mojang.tower;
+package com.mojang.tower.web;
+
+import com.mojang.tower.ui.TowerComponent;
 
 import java.applet.Applet;
 import java.awt.BorderLayout;
