@@ -17,13 +17,13 @@ public class FarmPlot extends Entity
 
     private int age;
     private int stamina;
-    private int yield;
+    private int submit;
 
     public FarmPlot(double x, double y, int initialAge) {
         super(x, y, 0);
         this.age = initialAge;
         this.stamina = initialAge;
-        this.yield = initialAge;
+        this.submit = initialAge;
     }
 
 
@@ -34,7 +34,7 @@ public class FarmPlot extends Entity
         {
             age++;
             stamina++;
-            yield++;
+            submit++;
         }
     }
 
@@ -74,7 +74,7 @@ public class FarmPlot extends Entity
     @Override
     public boolean givesResource(int resourceId)
     {
-        return getAge() > 6 && resourceId == Resources.FOOD;
+        return getAge() > 6 && resourceId == Resources.RESOURCE_FOOD_ID;
     }
     
 }

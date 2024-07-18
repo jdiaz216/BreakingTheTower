@@ -25,12 +25,9 @@ public class House extends Entity
 
     private static final int ANIM_FRAME_INCREMENT = 1;
 
-    private static final int RESIDENCE_SPAWN_PROBABILITY = 20;
-
     private HouseType type;
     private int buildTime;
     private int buildDuration;
-    private int animFrame;
     private int maxHp;
     private int hp;
 
@@ -41,7 +38,6 @@ public class House extends Entity
         this.buildDuration = DEFAULT_BUILD_DURATION;
         this.maxHp = DEFAULT_MAX_HP;
         this.hp = maxHp;
-        this.animFrame = 0;
     }
 
     @Override
@@ -114,7 +110,6 @@ public class House extends Entity
 
     public void tick()
     {
-        animFrame += ANIM_FRAME_INCREMENT;
         if (buildTime < buildDuration)
         {
             for (int i = 0; i < 2; i++)
@@ -145,15 +140,15 @@ public class House extends Entity
                 };
                 if (type == HouseType.MASON)
                 {
-                    peon.setJob(new Job.Gather(Resources.ROCK, this));
+                    peon.setJob(new Job.Gather(Resources.RESOURCE_ROCK_ID, this));
                 }
                 else if (type == HouseType.WOODCUTTER)
                 {
-                    peon.setJob(new Job.Gather(Resources.WOOD, this));
+                    peon.setJob(new Job.Gather(Resources.RESOURCE_WOOD_ID, this));
                 }
                 else if (type == HouseType.WINDMILL)
                 {
-                    peon.setJob(new Job.Gather(Resources.FOOD, this));
+                    peon.setJob(new Job.Gather(Resources.RESOURCE_FOOD_ID, this));
                 }
                 else if (type == HouseType.PLANTER)
                 {

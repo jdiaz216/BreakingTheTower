@@ -9,11 +9,11 @@ public class HouseType
 {
     public static final HouseType[] houseTypes = new HouseType[8];
 
-    public static final HouseType MASON = new HouseType(1, "Mason", 10, 0, 15, 0).setAcceptsResource(Resources.ROCK);
-    public static final HouseType WOODCUTTER = new HouseType(2, "Woodcutter", 10, 15, 0, 0).setAcceptsResource(Resources.WOOD);
+    public static final HouseType MASON = new HouseType(1, "Mason", 10, 0, 15, 0).setAcceptsResource(Resources.RESOURCE_ROCK_ID);
+    public static final HouseType WOODCUTTER = new HouseType(2, "Woodcutter", 10, 15, 0, 0).setAcceptsResource(Resources.RESOURCE_WOOD_ID);
     public static final HouseType PLANTER = new HouseType(0, "Planter", 10, 30, 15, 10);
     public static final HouseType FARM = new HouseType(6, "Farmer", 10, 30, 30, 0);
-    public static final HouseType WINDMILL = new HouseType(7, "Miller", 8, 15, 15, 0).setAcceptsResource(Resources.FOOD);
+    public static final HouseType WINDMILL = new HouseType(7, "Miller", 8, 15, 15, 0).setAcceptsResource(Resources.RESOURCE_FOOD_ID);
     public static final HouseType GUARDPOST = new HouseType(5, "Guardpost", 3, 0, 30, 0);
     public static final HouseType BARRACKS = new HouseType(3, "Barracks", 10, 15, 50, 0);
     public static final HouseType RESIDENCE = new HouseType(4, "Residence", 10, 30, 30, 30);

@@ -71,7 +71,7 @@ public class Tree extends Entity
     
     public boolean givesResource(int resourceId)
     {
-        return getAge()>6 && resourceId== Resources.WOOD;
+        return getAge()>6 && resourceId== Resources.RESOURCE_WOOD_ID;
     }
     
 }
