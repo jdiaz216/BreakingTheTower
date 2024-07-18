@@ -8,8 +8,8 @@ import java.util.Random;
  */
 public class Entity implements Comparable<Entity>
 {
-    public double x, y, r;
-    public double xr, yr;
+    protected double x, y, r;
+    protected double xr, yr;
 
     protected Island island;
     protected Bitmaps bitmaps;

@@ -30,7 +30,7 @@ public class House extends Entity
 
     public House(double x, double y, HouseType type)
     {
-        super(x, y, type.radius);
+        super(x, y, type.getRadius());
         this.type = type;
         this.buildDuration = DEFAULT_BUILD_DURATION;
         this.maxHp = DEFAULT_MAX_HP;
@@ -53,11 +53,11 @@ public class House extends Entity
         Sounds.play(new Sound.Destroy());
         if (type == HouseType.RESIDENCE)
         {
-            island.populationCap -= POPULATION_PER_RESIDENCE;
+            island.decreasePopulationCap(POPULATION_PER_RESIDENCE);
         }
         if (type == HouseType.BARRACKS)
         {
-            island.warriorPopulationCap -= WARRIORS_PER_BARRACKS;
+            island.decreaseWarriorPopulationCap(WARRIORS_PER_BARRACKS);
         }
         alive = false;
     }
@@ -70,12 +70,12 @@ public class House extends Entity
 
     public boolean acceptsResource(int resourceId)
     {
-        return buildTime >= buildDuration && type.acceptResource == resourceId;
+        return buildTime >= buildDuration && type.getAcceptResource() == resourceId;
     }
 
     public boolean submitResource(int resourceId)
     {
-        if (buildTime >= buildDuration && type.acceptResource == resourceId)
+        if (buildTime >= buildDuration && type.getAcceptResource() == resourceId)
         {
             Sounds.play(new Sound.Gather());
             puff();
@@ -95,11 +95,11 @@ public class House extends Entity
                 Sounds.play(new Sound.FinishBuilding());
                 if (type == HouseType.RESIDENCE)
                 {
-                    island.populationCap += POPULATION_PER_RESIDENCE;
+                    island.increasePopulationCap(POPULATION_PER_RESIDENCE);
                 }
                 if (type == HouseType.BARRACKS)
                 {
-                    island.warriorPopulationCap += WARRIORS_PER_BARRACKS;
+                    island.increaseWarriorPopulationCap(WARRIORS_PER_BARRACKS);
                 }
             }
         }
@@ -128,7 +128,7 @@ public class House extends Entity
             }
 
             Peon peon = getRandomPeon(50, 50, true);
-            if (peon != null && peon.job == null && peon.type == 0)
+            if (peon != null && peon.job == null && peon.getType() == 0)
             {
                 TargetFilter noMobFilter = new TargetFilter()
                 {
@@ -164,22 +164,22 @@ public class House extends Entity
             if (type == HouseType.GUARDPOST)
             {
                 peon = getRandomPeon(80, 80, true);
-                if (peon != null && peon.job == null && (peon.type==0 && random.nextInt(2)==0))
+                if (peon != null && peon.job == null && (peon.getType() == 0 && random.nextInt(2)==0))
                 {
                     peon.setJob(new Job.Goto(this));
                 }
             }
 
-            if (type == HouseType.BARRACKS && island.warriorPopulation < island.warriorPopulationCap && island.resources.wood >= WOOD_PER_WARRIOR)
+            if (type == HouseType.BARRACKS && island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= WOOD_PER_WARRIOR)
             {
                 peon = getRandomPeon(80, 80, true);
-                if (peon != null && peon.job == null && peon.type == 0)
+                if (peon != null && peon.job == null && peon.getType() == 0)
                 {
                     peon.setJob(new Job.GotoAndConvert(this));
                 }
             }
 
-            if (type == HouseType.RESIDENCE && island.population < island.populationCap && island.resources.food >= FOOD_PER_PEON && random.nextInt(20) == 0)
+            if (type == HouseType.RESIDENCE && island.getPopulation() < island.getPopulationCap() && island.getResources().getFood() >= FOOD_PER_PEON && random.nextInt(20) == 0)
             {
                 double xt = x + (random.nextDouble() * 2 - 1) * 9;
                 double yt = y + (random.nextDouble() * 2 - 1) * 9;
@@ -188,7 +188,7 @@ public class House extends Entity
                 if (island.isFree(peon.x, peon.y, peon.r))
                 {
                     puff();
-                    island.resources.food -= FOOD_PER_PEON;
+                    island.getResources().decreaseFood(FOOD_PER_PEON);
                     island.addEntity(peon);
                     Sounds.play(new Sound.Spawn());
                 }
@@ -200,11 +200,11 @@ public class House extends Entity
     {
         if (type == HouseType.RESIDENCE)
         {
-            island.populationCap -= POPULATION_PER_RESIDENCE;
+            island.decreasePopulationCap(POPULATION_PER_RESIDENCE);
         }
         if (type == HouseType.BARRACKS)
         {
-            island.warriorPopulationCap -= POPULATION_PER_RESIDENCE;
+            island.decreaseWarriorPopulationCap(POPULATION_PER_RESIDENCE);
         }
     }
 
@@ -273,8 +273,8 @@ public class House extends Entity
 
     public void sell()
     {
-        island.resources.wood += type.wood * 3 * hp / (maxHp * 4);
-        island.resources.rock += type.rock * 3 * hp / (maxHp * 4);
+        island.getResources().increaseWood(type.getWood() * 3 * hp / (maxHp * 4));
+        island.getResources().increaseRock(type.getRock() * 3 * hp / (maxHp * 4));
         die();
     }
 }
