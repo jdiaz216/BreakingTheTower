@@ -23,22 +23,22 @@ public class Bitmaps
     private static final String SHEET_PATH = RESOURCE_PATH + "sheet.gif";
     private static final String ISLAND_PATH = RESOURCE_PATH + "island.gif";
     
-    public BufferedImage[] trees;
-    public BufferedImage[] farmPlots;
-    public BufferedImage[] rocks;
-    public BufferedImage[] carriedResources;
-    public BufferedImage[][] peons;
-    public BufferedImage island;
-    public BufferedImage towerTop;
-    public BufferedImage towerMid;
-    public BufferedImage towerBot;
-    public BufferedImage[] smoke;
-    public BufferedImage[] infoPuffs;
-    public BufferedImage[][] houses;
-    public BufferedImage delete, help;
-    public BufferedImage[] soundButtons;
+    private BufferedImage[] trees;
+    private BufferedImage[] farmPlots;
+    private BufferedImage[] rocks;
+    private BufferedImage[] carriedResources;
+    private BufferedImage[][] peons;
+    private BufferedImage island;
+    private BufferedImage towerTop;
+    private BufferedImage towerMid;
+    private BufferedImage towerBot;
+    private BufferedImage[] smoke;
+    private BufferedImage[] infoPuffs;
+    private BufferedImage[][] houses;
+    private BufferedImage delete, help;
+    private BufferedImage[] soundButtons;
     
-    public BufferedImage logo, wonScreen;
+    private BufferedImage logo, wonScreen;
 
     public void loadAll() throws IOException
     {
@@ -129,5 +129,73 @@ public class Bitmaps
         newImage.setRGB(0, 0, w, h, pixels, 0, w);
 
         return newImage;
+    }
+
+    public BufferedImage[] getTrees() {
+        return trees;
+    }
+
+    public BufferedImage[] getFarmPlots() {
+        return farmPlots;
+    }
+
+    public BufferedImage[] getRocks() {
+        return rocks;
+    }
+
+    public BufferedImage[] getCarriedResources() {
+        return carriedResources;
+    }
+
+    public BufferedImage[][] getPeons() {
+        return peons;
+    }
+
+    public BufferedImage getIsland() {
+        return island;
+    }
+
+    public BufferedImage getTowerTop() {
+        return towerTop;
+    }
+
+    public BufferedImage getTowerMid() {
+        return towerMid;
+    }
+
+    public BufferedImage getTowerBot() {
+        return towerBot;
+    }
+
+    public BufferedImage[] getSmoke() {
+        return smoke;
+    }
+
+    public BufferedImage[] getInfoPuffs() {
+        return infoPuffs;
+    }
+
+    public BufferedImage[][] getHouses() {
+        return houses;
+    }
+
+    public BufferedImage getDelete() {
+        return delete;
+    }
+
+    public BufferedImage getHelp() {
+        return help;
+    }
+
+    public BufferedImage[] getSoundButtons() {
+        return soundButtons;
+    }
+
+    public BufferedImage getLogo() {
+        return logo;
+    }
+
+    public BufferedImage getWonScreen() {
+        return wonScreen;
     }
 }

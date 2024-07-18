@@ -7,9 +7,9 @@ public class Peon extends Entity
 {
     private static final int[] animSteps = { 0, 1, 0, 2 };
     private static final int[] animDirs = { 2, 0, 3, 1 };
-    public double rot = 0;
-    public double moveTick = 0;
-    public int type;
+    private double rot = 0;
+    private double moveTick = 0;
+    private int type;
     private int wanderTime = 0;
     protected Job job;
 
@@ -32,7 +32,7 @@ public class Peon extends Entity
     public void init(Island island, Bitmaps bitmaps)
     {
         super.init(island, bitmaps);
-        island.population++;
+        island.increasePopulation();
     }
 
     public void fight(Monster monster)
@@ -56,10 +56,10 @@ public class Peon extends Entity
     public void die()
     {
         Sounds.play(new Sound.Death());
-        island.population--;
+        island.decreasePopulation();
         if (type == 1)
         {
-            island.warriorPopulation--;
+            island.decreaseWarriorPopulation();
         }
         alive = false;
     }
@@ -109,9 +109,9 @@ public class Peon extends Entity
         double speed = 1;
         if (wanderTime == 0 && job != null && job.hasTarget())
         {
-            double xd = job.xTarget - x;
-            double yd = job.yTarget - y;
-            double rd = job.targetDistance + r;
+            double xd = job.getxTarget() - x;
+            double yd = job.getyTarget() - y;
+            double rd = job.getTargetDistance() + r;
             if (xd * xd + yd * yd < rd * rd)
             {
                 job.arrived();
@@ -163,7 +163,7 @@ public class Peon extends Entity
 
     public void render(Graphics2D g, double alpha)
     {
-        int rotStep = (int) Math.floor((rot - island.rot) * 4 / (Math.PI * 2) + 0.5);
+        int rotStep = (int) Math.floor((rot - island.getRot()) * 4 / (Math.PI * 2) + 0.5);
         int animStep = animSteps[(int) (moveTick / 4) & 3];
 
         int x = (int) (xr - 4);
@@ -174,12 +174,12 @@ public class Peon extends Entity
 
         if (carrying >= 0)
         {
-            g.drawImage(bitmaps.peons[2][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
-            g.drawImage(bitmaps.carriedResources[carrying], x, y - 3, null);
+            g.drawImage(bitmaps.getPeons()[2][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
+            g.drawImage(bitmaps.getCarriedResources()[carrying], x, y - 3, null);
         }
         else
         {
-            g.drawImage(bitmaps.peons[type][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
+            g.drawImage(bitmaps.getPeons()[type][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
         }
 
         if (hp < maxHp)
@@ -214,5 +214,17 @@ public class Peon extends Entity
             level++;
             Sounds.play(new Sound.Ding());
         }
+    }
+
+    public double getRot() {
+        return rot;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void increaseRot(double value) {
+        this.rot += value;
     }
 }

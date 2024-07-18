@@ -43,10 +43,10 @@ public class Job
 
         public void arrived()
         {
-            if (island.warriorPopulation<island.warriorPopulationCap && island.resources.wood >= House.WOOD_PER_WARRIOR)
+            if (island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= House.WOOD_PER_WARRIOR)
             {
-                island.warriorPopulation++;
-                island.resources.wood -= House.WOOD_PER_WARRIOR;
+                island.setWarriorPopulation(island.getWarriorPopulation() + 1);
+                island.getResources().decreaseWood(House.WOOD_PER_WARRIOR);
                 peon.setType(1);
                 ((House)target).puff();
                 Sounds.play(new Sound.SpawnWarrior());
@@ -129,8 +129,8 @@ public class Job
         {
             if (!hasSeed) return super.hasTarget();
             
-            double xt = peon.x + Math.cos(peon.rot) * 10;
-            double yt = peon.y + Math.sin(peon.rot) * 10;
+            double xt = peon.x + Math.cos(peon.getRot()) * 10;
+            double yt = peon.y + Math.sin(peon.getRot()) * 10;
             toPlant.setPos(xt, yt);
             if (island.isFree(toPlant.x, toPlant.y, 8))
             {
@@ -199,7 +199,7 @@ public class Job
                 {
                     hasResource = true;
                     target = returnTo;
-                    peon.rot += Math.PI;
+                    peon.increaseRot(Math.PI);
 //                    tryFindTarget();
                 }
                 boreTime = 1000;
@@ -210,7 +210,7 @@ public class Job
                 {
                     hasResource = false;
                     target = null;
-                    island.resources.add(resourceId, 1);
+                    island.getResources().add(resourceId, 1);
                     peon.setJob(null);
                 }
             }
@@ -219,10 +219,10 @@ public class Job
 
     protected Peon peon;
     protected Island island;
-    public double xTarget, yTarget, targetDistance;
+    private double xTarget, yTarget, targetDistance;
     protected Entity target;
     protected int bonusRadius = 2;
-    public int boreTime = 500;
+    protected int boreTime = 500;
 
     public void init(Island island, Peon peon)
     {
@@ -309,5 +309,17 @@ public class Job
     public int getCarried()
     {
         return -1;
+    }
+
+    public double getxTarget() {
+        return xTarget;
+    }
+
+    public double getyTarget() {
+        return yTarget;
+    }
+
+    public double getTargetDistance() {
+        return targetDistance;
     }
 }

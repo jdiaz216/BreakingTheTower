@@ -2,7 +2,7 @@ package com.mojang.tower;
 
 public class Vec
 {
-    public final double x, y, z;
+    private final double x, y, z;
     
     public Vec(double x, double y, double z)
     {
