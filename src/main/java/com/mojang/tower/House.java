@@ -227,30 +227,43 @@ public class House extends Entity
         return null;
     }
 
-    public void render(Graphics2D g, double alpha)
-    {
-        int x = (int) (xr - 8);
-        int y = -(int) (yr / 2 + 16 - 4);
+    @Override
+    public void render(Graphics2D g, double alpha) {
 
-        if (type == HouseType.GUARDPOST) y -= 2;
-        if (type == HouseType.WINDMILL) y -= 1;
+        int xPos = (int) (xr - 8);
+        int yPos = calculateYPosition();
 
-        if (buildTime < buildDuration)
-        {
-            g.drawImage(bitmaps.houses[0][buildTime * 6 / buildDuration], x, y, null);
+        if (buildTime < buildDuration) {
+            g.drawImage(bitmaps.houses[0][buildTime * 6 / buildDuration], xPos, yPos, null);
         }
-        else
-        {
-            g.drawImage(type.getImage(bitmaps), x, y, null);
+        else {
+            g.drawImage(type.getImage(bitmaps), xPos, yPos, null);
         }
 
-        if (hp < maxHp)
-        {
+        renderHpBar(g, xPos, yPos);
+
+    }
+
+    private int calculateYPosition() {
+
+        int yPos = -(int) (yr / 2 + 16 - 4);
+
+        if (type == HouseType.GUARDPOST) yPos -= 2;
+        if (type == HouseType.WINDMILL) yPos -= 1;
+
+        return yPos;
+
+    }
+
+    private void renderHpBar(Graphics2D g, int x, int y) {
+
+        if (hp < maxHp) {
             g.setColor(Color.BLACK);
             g.fillRect(x + 4, y - 2, 8, 1);
             g.setColor(Color.RED);
             g.fillRect(x + 4, y - 2, hp * 8 / maxHp, 1);
         }
+
     }
 
     public void puff()
