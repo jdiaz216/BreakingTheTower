@@ -10,19 +10,35 @@ public class House extends Entity
     public static final int FOOD_PER_PEON = 5;
     public static final int WOOD_PER_WARRIOR = 5;
 
+
+    private static final int DEFAULT_BUILD_DURATION = 192; // 32 * 6
+
+    private static final int DEFAULT_MAX_HP = 256;
+
+    private static final int HP_INCREMENT = 1;
+
+    private static final int ANIM_FRAME_INCREMENT = 1;
+
+    private static final int RESIDENCE_SPAWN_PROBABILITY = 20;
+
     private HouseType type;
     private int buildTime;
-    private int buildDuration = 32 * 6;
-    private int animFrame = 0;
-    private int maxHp = 256;
-    private int hp = maxHp;
+    private int buildDuration;
+    private int animFrame;
+    private int maxHp;
+    private int hp;
 
     public House(double x, double y, HouseType type)
     {
         super(x, y, type.getRadius());
         this.type = type;
+        this.buildDuration = DEFAULT_BUILD_DURATION;
+        this.maxHp = DEFAULT_MAX_HP;
+        this.hp = maxHp;
+        this.animFrame = 0;
     }
 
+    @Override
     public void fight(Monster monster)
     {
         if (hp <= 0) return;
@@ -73,8 +89,7 @@ public class House extends Entity
         if (buildTime < buildDuration)
         {
             buildTime++;
-            if (hp < maxHp) hp += 1;
-            if (hp > maxHp) hp = maxHp;
+            hp = Math.min(hp + HP_INCREMENT, maxHp);
             if (buildTime == buildDuration)
             {
                 Sounds.play(new Sound.FinishBuilding());
@@ -93,7 +108,7 @@ public class House extends Entity
 
     public void tick()
     {
-        animFrame++;
+        animFrame += ANIM_FRAME_INCREMENT;
         if (buildTime < buildDuration)
         {
             for (int i = 0; i < 2; i++)
@@ -212,30 +227,43 @@ public class House extends Entity
         return null;
     }
 
-    public void render(Graphics2D g, double alpha)
-    {
-        int x = (int) (xr - 8);
-        int y = -(int) (yr / 2 + 16 - 4);
+    @Override
+    public void render(Graphics2D g, double alpha) {
 
-        if (type == HouseType.GUARDPOST) y -= 2;
-        if (type == HouseType.WINDMILL) y -= 1;
+        int xPos = (int) (xr - 8);
+        int yPos = calculateYPosition();
 
-        if (buildTime < buildDuration)
-        {
-            g.drawImage(bitmaps.getHouses()[0][buildTime * 6 / buildDuration], x, y, null);
+        if (buildTime < buildDuration) {
+            g.drawImage(bitmaps.houses[0][buildTime * 6 / buildDuration], xPos, yPos, null);
         }
-        else
-        {
-            g.drawImage(type.getImage(bitmaps), x, y, null);
+        else {
+            g.drawImage(type.getImage(bitmaps), xPos, yPos, null);
         }
 
-        if (hp < maxHp)
-        {
+        renderHpBar(g, xPos, yPos);
+
+    }
+
+    private int calculateYPosition() {
+
+        int yPos = -(int) (yr / 2 + 16 - 4);
+
+        if (type == HouseType.GUARDPOST) yPos -= 2;
+        if (type == HouseType.WINDMILL) yPos -= 1;
+
+        return yPos;
+
+    }
+
+    private void renderHpBar(Graphics2D g, int x, int y) {
+
+        if (hp < maxHp) {
             g.setColor(Color.BLACK);
             g.fillRect(x + 4, y - 2, 8, 1);
             g.setColor(Color.RED);
             g.fillRect(x + 4, y - 2, hp * 8 / maxHp, 1);
         }
+
     }
 
     public void puff()
