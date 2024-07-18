@@ -2,19 +2,26 @@ package com.mojang.tower;
 
 import java.awt.Graphics2D;
 
+/**
+ * Represents a farm plot entity in the game.
+ */
 public class FarmPlot extends Entity
 {
     public static final int GROW_SPEED = 200;
-    private int age;
-    private int stamina = 0;
-    private int yield = 0;
 
-    public FarmPlot(double x, double y, int age)
-    {
+    private int age;
+    private int stamina;
+    private int yield;
+
+    public FarmPlot(double x, double y, int initialAge) {
         super(x, y, 0);
-        this.yield = this.stamina = this.age = age;
+        this.age = initialAge;
+        this.stamina = initialAge;
+        this.yield = initialAge;
     }
 
+
+    @Override
     public void tick()
     {
         if (age < 7 * GROW_SPEED)
