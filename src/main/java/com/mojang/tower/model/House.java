@@ -240,7 +240,7 @@ public class House extends Entity
         int yPos = calculateYPosition();
 
         if (buildTime < buildDuration) {
-            g.drawImage(bitmaps.houses[0][buildTime * 6 / buildDuration], xPos, yPos, null);
+            g.drawImage(bitmaps.getHouses()[0][buildTime * 6 / buildDuration], xPos, yPos, null);
         }
         else {
             g.drawImage(type.getImage(bitmaps), xPos, yPos, null);
