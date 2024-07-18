@@ -1,13 +1,12 @@
 package com.mojang.tower.model;
 
-import com.mojang.tower.gameplay.Job;
 import com.mojang.tower.data.Resources;
+import com.mojang.tower.gameplay.Job;
+import com.mojang.tower.gameplay.TargetFilter;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
-import com.mojang.tower.gameplay.TargetFilter;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public class House extends Entity
 {
@@ -22,8 +21,6 @@ public class House extends Entity
     private static final int DEFAULT_MAX_HP = 256;
 
     private static final int HP_INCREMENT = 1;
-
-    private static final int ANIM_FRAME_INCREMENT = 1;
 
     private HouseType type;
     private int buildTime;
