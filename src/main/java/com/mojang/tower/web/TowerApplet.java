@@ -1,4 +1,4 @@
-package com.mojang.tower;
+package com.mojang.tower.web;
 
 import com.mojang.tower.ui.TowerComponent;
 

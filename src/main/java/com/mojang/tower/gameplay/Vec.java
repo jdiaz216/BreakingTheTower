@@ -1,4 +1,4 @@
-package com.mojang.tower;
+package com.mojang.tower.gameplay;
 
 public class Vec
 {

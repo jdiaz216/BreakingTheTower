@@ -1,4 +1,7 @@
-package com.mojang.tower;
+package com.mojang.tower.model;
+
+import com.mojang.tower.ui.Bitmaps;
+import com.mojang.tower.gameplay.TargetFilter;
 
 import java.awt.Graphics2D;
 import java.util.Random;
@@ -110,5 +113,17 @@ public class Entity implements Comparable<Entity>
 
     public void fight(Monster monster)
     {
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getR() {
+        return r;
     }
 }

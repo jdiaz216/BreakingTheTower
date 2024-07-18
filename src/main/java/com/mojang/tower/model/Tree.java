@@ -1,4 +1,6 @@
-package com.mojang.tower;
+package com.mojang.tower.model;
+
+import com.mojang.tower.data.Resources;
 
 import java.awt.Graphics2D;
 
@@ -69,7 +71,7 @@ public class Tree extends Entity
     
     public boolean givesResource(int resourceId)
     {
-        return getAge()>6 && resourceId==Resources.WOOD;
+        return getAge()>6 && resourceId== Resources.WOOD;
     }
     
 }

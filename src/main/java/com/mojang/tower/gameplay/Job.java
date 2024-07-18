@@ -1,4 +1,14 @@
-package com.mojang.tower;
+package com.mojang.tower.gameplay;
+
+import com.mojang.tower.model.Entity;
+import com.mojang.tower.model.FarmPlot;
+import com.mojang.tower.model.House;
+import com.mojang.tower.model.Island;
+import com.mojang.tower.model.Monster;
+import com.mojang.tower.model.Peon;
+import com.mojang.tower.model.Tree;
+import com.mojang.tower.sound.Sound;
+import com.mojang.tower.sound.Sounds;
 
 import java.util.Random;
 
@@ -129,10 +139,10 @@ public class Job
         {
             if (!hasSeed) return super.hasTarget();
             
-            double xt = peon.x + Math.cos(peon.getRot()) * 10;
-            double yt = peon.y + Math.sin(peon.getRot()) * 10;
+            double xt = peon.getX() + Math.cos(peon.getRot()) * 10;
+            double yt = peon.getY() + Math.sin(peon.getRot()) * 10;
             toPlant.setPos(xt, yt);
-            if (island.isFree(toPlant.x, toPlant.y, 8))
+            if (island.isFree(toPlant.getX(), toPlant.getY(), 8))
             {
                 island.addEntity(toPlant);
                 peon.setJob(null);
@@ -271,9 +281,9 @@ public class Job
         if (target != null && !target.isAlive()) target = null;
         if (target == null) return false;
 
-        xTarget = target.x;
-        yTarget = target.y;
-        targetDistance = target.r + bonusRadius;
+        xTarget = target.getX();
+        yTarget = target.getY();
+        targetDistance = target.getR() + bonusRadius;
         return true;
     }
 

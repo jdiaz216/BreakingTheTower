@@ -1,4 +1,4 @@
-package com.mojang.tower;
+package com.mojang.tower.ui;
 
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;

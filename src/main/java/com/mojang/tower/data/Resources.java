@@ -1,4 +1,6 @@
-package com.mojang.tower;
+package com.mojang.tower.data;
+
+import com.mojang.tower.model.HouseType;
 
 public class Resources
 {

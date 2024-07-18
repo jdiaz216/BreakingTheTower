@@ -1,13 +1,12 @@
 package com.mojang.tower.ui;
 
-import com.mojang.tower.Bitmaps;
-import com.mojang.tower.Entity;
-import com.mojang.tower.House;
-import com.mojang.tower.HouseType;
-import com.mojang.tower.Island;
-import com.mojang.tower.Sound;
-import com.mojang.tower.Sounds;
-import com.mojang.tower.TargetFilter;
+import com.mojang.tower.model.Entity;
+import com.mojang.tower.model.House;
+import com.mojang.tower.model.HouseType;
+import com.mojang.tower.model.Island;
+import com.mojang.tower.sound.Sound;
+import com.mojang.tower.sound.Sounds;
+import com.mojang.tower.gameplay.TargetFilter;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -33,7 +32,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
     private int xMouse = -1, yMouse;
     private double xRot, xRotA;
 
-    Bitmaps bitmaps = new Bitmaps();
+    private Bitmaps bitmaps = new Bitmaps();
     private Island island;
 
     private boolean scrolling = false;
@@ -533,5 +532,9 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
     {
         won = true;
         winScore = 100000 * (TowerComponent.TICKS_PER_SECOND * 60 * 30) / (gameTime);
+    }
+
+    public Bitmaps getBitmaps() {
+        return bitmaps;
     }
 }
