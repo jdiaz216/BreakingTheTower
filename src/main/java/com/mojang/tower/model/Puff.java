@@ -1,8 +1,6 @@
 package com.mojang.tower.model;
 
-import com.mojang.tower.model.Entity;
-
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public class Puff extends Entity
 {

@@ -7,12 +7,13 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-public class Bitmaps
+public class Bitmaps implements Serializable
 {
 
     private static final Logger LOGGER = Logger.getLogger(Bitmaps.class.getName());
