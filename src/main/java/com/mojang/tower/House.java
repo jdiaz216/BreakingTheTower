@@ -10,19 +10,35 @@ public class House extends Entity
     public static final int FOOD_PER_PEON = 5;
     public static final int WOOD_PER_WARRIOR = 5;
 
+
+    private static final int DEFAULT_BUILD_DURATION = 192; // 32 * 6
+
+    private static final int DEFAULT_MAX_HP = 256;
+
+    private static final int HP_INCREMENT = 1;
+
+    private static final int ANIM_FRAME_INCREMENT = 1;
+
+    private static final int RESIDENCE_SPAWN_PROBABILITY = 20;
+
     private HouseType type;
     private int buildTime;
-    private int buildDuration = 32 * 6;
-    private int animFrame = 0;
-    private int maxHp = 256;
-    private int hp = maxHp;
+    private int buildDuration;
+    private int animFrame;
+    private int maxHp;
+    private int hp;
 
     public House(double x, double y, HouseType type)
     {
         super(x, y, type.radius);
         this.type = type;
+        this.buildDuration = DEFAULT_BUILD_DURATION;
+        this.maxHp = DEFAULT_MAX_HP;
+        this.hp = maxHp;
+        this.animFrame = 0;
     }
 
+    @Override
     public void fight(Monster monster)
     {
         if (hp <= 0) return;
@@ -73,8 +89,7 @@ public class House extends Entity
         if (buildTime < buildDuration)
         {
             buildTime++;
-            if (hp < maxHp) hp += 1;
-            if (hp > maxHp) hp = maxHp;
+            hp = Math.min(hp + HP_INCREMENT, maxHp);
             if (buildTime == buildDuration)
             {
                 Sounds.play(new Sound.FinishBuilding());
@@ -93,7 +108,7 @@ public class House extends Entity
 
     public void tick()
     {
-        animFrame++;
+        animFrame += ANIM_FRAME_INCREMENT;
         if (buildTime < buildDuration)
         {
             for (int i = 0; i < 2; i++)
