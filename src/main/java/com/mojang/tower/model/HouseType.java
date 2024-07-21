@@ -5,8 +5,7 @@ import com.mojang.tower.ui.Bitmaps;
 
 import java.awt.image.BufferedImage;
 
-public class HouseType
-{
+public class HouseType {
     public static final HouseType[] houseTypes = new HouseType[8];
 
     public static final HouseType MASON = new HouseType(1, "Mason", 10, 0, 15, 0).setAcceptsResource(Resources.ROCK);
@@ -26,8 +25,7 @@ public class HouseType
 
     private static int id = 0;
 
-    private HouseType(int image, String name, int radius, int wood, int rock, int food)
-    {
+    private HouseType(int image, String name, int radius, int wood, int rock, int food) {
         this.image = image;
         this.name = name;
         this.radius = radius;
@@ -37,19 +35,16 @@ public class HouseType
         houseTypes[id++] = this;
     }
 
-    private HouseType setAcceptsResource(int acceptResource)
-    {
+    private HouseType setAcceptsResource(int acceptResource) {
         this.acceptResource = acceptResource;
         return this;
     }
 
-    public BufferedImage getImage(Bitmaps bitmaps)
-    {
+    public BufferedImage getImage(Bitmaps bitmaps) {
         return bitmaps.getHouses()[image % 2 + 1][image / 2];
     }
 
-    public String getString()
-    {
+    public String getString() {
         String res = name + " [";
         if (wood > 0) res += " wood:" + wood;
         if (rock > 0) res += " rock:" + rock;
@@ -58,8 +53,7 @@ public class HouseType
         return res;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         if (this == MASON) return "Gathers nearby stones, produces rock";
         if (this == WOODCUTTER) return "Cuts down nearby trees, produces wood";
         if (this == PLANTER) return "Plants new trees that can later be cut down";
