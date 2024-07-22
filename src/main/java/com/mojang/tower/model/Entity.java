@@ -13,7 +13,7 @@ public class Entity implements Comparable<Entity> {
     protected double x, y, r;
     protected double xr, yr;
 
-    protected Island island;
+    protected static Island island;
     protected Bitmaps bitmaps;
     protected Random random;
     protected boolean alive = true;

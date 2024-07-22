@@ -6,7 +6,6 @@ import com.mojang.tower.sound.Sounds;
 import com.mojang.tower.gameplay.TargetFilter;
 import com.mojang.tower.ui.Bitmaps;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class Peon extends Entity {
@@ -139,8 +138,8 @@ public class Peon extends Entity {
     }
 
     public void render(Graphics2D g, double alpha) {
-        int rotStep = (int) Math.floor((rot - island.getRot()) * 4 / (Math.PI * 2) + 0.5);
-        int animStep = animSteps[(int) (moveTick / 4) & 3];
+        int rotationStep = Monster.getRotationStep();
+        int animationStep = Monster.getAnimationStep();
 
         int x = (int) (xr - 4);
         int y = -(int) (yr / 2 + 8);
@@ -149,18 +148,13 @@ public class Peon extends Entity {
         if (job != null) carrying = job.getCarried();
 
         if (carrying >= 0) {
-            g.drawImage(bitmaps.getPeons()[2][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
+            g.drawImage(bitmaps.getPeons()[2][animDirs[rotationStep & 3] * 3 + animationStep], x, y, null);
             g.drawImage(bitmaps.getCarriedResources()[carrying], x, y - 3, null);
         } else {
-            g.drawImage(bitmaps.getPeons()[type][animDirs[rotStep & 3] * 3 + animStep], x, y, null);
+            g.drawImage(bitmaps.getPeons()[type][animDirs[rotationStep & 3] * 3 + animationStep], x, y, null);
         }
 
-        if (hp < maxHp) {
-            g.setColor(Color.BLACK);
-            g.fillRect(x + 2, y - 2, 4, 1);
-            g.setColor(Color.RED);
-            g.fillRect(x + 2, y - 2, hp * 4 / maxHp, 1);
-        }
+        Monster.drawHealthBar(g, x, y, hp, maxHp);
 
         if (level > 0) {
 
