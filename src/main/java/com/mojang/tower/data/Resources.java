@@ -22,18 +22,16 @@ public class Resources
         }
     }
 
-    public void charge(HouseType type)
-    {
-        wood-=type.getWood();
-        rock-=type.getRock();
-        food-=type.getFood();
+    public void charge(HouseType type) {
+        wood -= type.getWood();
+        rock -= type.getRock();
+        food -= type.getFood();
     }
 
-    public boolean canAfford(HouseType type)
-    {
-        if (wood<type.getWood()) return false;
-        if (rock<type.getRock()) return false;
-        if (food<type.getFood()) return false;
+    public boolean canAfford(HouseType type) {
+        if (wood < type.getWood()) return false;
+        if (rock < type.getRock()) return false;
+        if (food < type.getFood()) return false;
         return true;
     }
 

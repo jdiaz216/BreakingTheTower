@@ -7,8 +7,7 @@ import java.awt.Graphics2D;
 /**
  * Represents a farm plot entity in the game.
  */
-public class FarmPlot extends Entity
-{
+public class FarmPlot extends Entity {
     public static final int GROW_SPEED = 200;
     public static final int MAX_AGE = 7 * GROW_SPEED;
     public static final int HARVEST_STAMINA_COST = 64;
@@ -28,10 +27,8 @@ public class FarmPlot extends Entity
 
 
     @Override
-    public void tick()
-    {
-        if (age < MAX_AGE)
-        {
+    public void tick() {
+        if (age < MAX_AGE) {
             age++;
             stamina++;
             submit++;
@@ -48,33 +45,28 @@ public class FarmPlot extends Entity
         g.drawImage(bitmaps.getFarmPlots()[imageIndex], xPos, yPos, null);
     }
 
-    public void cut()
-    {
+    public void cut() {
         alive = false;
     }
 
 
     @Override
-    public boolean gatherResource(int resourceId)
-    {
+    public boolean gatherResource(int resourceId) {
         stamina -= HARVEST_STAMINA_COST;
-        if (stamina <= 0)
-        {
+        if (stamina <= 0) {
             alive = false;
             return true;
         }
         return false;
     }
 
-    public int getAge()
-    {
+    public int getAge() {
         return age / GROW_SPEED;
     }
 
     @Override
-    public boolean givesResource(int resourceId)
-    {
+    public boolean givesResource(int resourceId) {
         return getAge() > 6 && resourceId == Resources.RESOURCE_FOOD_ID;
     }
-    
+
 }

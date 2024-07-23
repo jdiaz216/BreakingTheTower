@@ -8,8 +8,7 @@ import com.mojang.tower.sound.Sounds;
 
 import java.awt.*;
 
-public class House extends Entity
-{
+public class House extends Entity {
     private static final int POPULATION_PER_RESIDENCE = 10;
     private static final int WARRIORS_PER_BARRACKS = 5;
     public static final int FOOD_PER_PEON = 5;
@@ -28,8 +27,7 @@ public class House extends Entity
     private int maxHp;
     private int hp;
 
-    public House(double x, double y, HouseType type)
-    {
+    public House(double x, double y, HouseType type) {
         super(x, y, type.getRadius());
         this.type = type;
         this.buildDuration = DEFAULT_BUILD_DURATION;
@@ -38,44 +36,35 @@ public class House extends Entity
     }
 
     @Override
-    public void fight(Monster monster)
-    {
+    public void fight(Monster monster) {
         if (hp <= 0) return;
-        if (--hp <= 0)
-        {
+        if (--hp <= 0) {
             die();
         }
     }
 
-    public void die()
-    {
+    public void die() {
         Sounds.play(new Sound.Destroy());
-        if (type == HouseType.RESIDENCE)
-        {
+        if (type == HouseType.RESIDENCE) {
             island.decreasePopulationCap(POPULATION_PER_RESIDENCE);
         }
-        if (type == HouseType.BARRACKS)
-        {
+        if (type == HouseType.BARRACKS) {
             island.decreaseWarriorPopulationCap(WARRIORS_PER_BARRACKS);
         }
         alive = false;
     }
 
-    public void complete()
-    {
+    public void complete() {
         hp = maxHp;
         buildTime = buildDuration;
     }
 
-    public boolean acceptsResource(int resourceId)
-    {
+    public boolean acceptsResource(int resourceId) {
         return buildTime >= buildDuration && type.getAcceptResource() == resourceId;
     }
 
-    public boolean submitResource(int resourceId)
-    {
-        if (buildTime >= buildDuration && type.getAcceptResource() == resourceId)
-        {
+    public boolean submitResource(int resourceId) {
+        if (buildTime >= buildDuration && type.getAcceptResource() == resourceId) {
             Sounds.play(new Sound.Gather());
             puff();
             return true;
@@ -83,21 +72,16 @@ public class House extends Entity
         return false;
     }
 
-    public boolean build()
-    {
-        if (buildTime < buildDuration)
-        {
+    public boolean build() {
+        if (buildTime < buildDuration) {
             buildTime++;
             hp = Math.min(hp + HP_INCREMENT, maxHp);
-            if (buildTime == buildDuration)
-            {
+            if (buildTime == buildDuration) {
                 Sounds.play(new Sound.FinishBuilding());
-                if (type == HouseType.RESIDENCE)
-                {
+                if (type == HouseType.RESIDENCE) {
                     island.increasePopulationCap(POPULATION_PER_RESIDENCE);
                 }
-                if (type == HouseType.BARRACKS)
-                {
+                if (type == HouseType.BARRACKS) {
                     island.increaseWarriorPopulationCap(WARRIORS_PER_BARRACKS);
                 }
             }
@@ -105,86 +89,61 @@ public class House extends Entity
         return buildTime == buildDuration;
     }
 
-    public void tick()
-    {
-        if (buildTime < buildDuration)
-        {
-            for (int i = 0; i < 2; i++)
-            {
+    public void tick() {
+        if (buildTime < buildDuration) {
+            for (int i = 0; i < 2; i++) {
                 Peon peon = getRandomPeon(100, 80, true);
-                if (peon != null && peon.job == null)
-                {
+                if (peon != null && peon.job == null) {
                     peon.setJob(new Job.Build(this));
                 }
             }
-        }
-        else
-        {
-            if (hp < maxHp && random.nextInt(4) == 0)
-            {
+        } else {
+            if (hp < maxHp && random.nextInt(4) == 0) {
                 hp++;
             }
 
             Peon peon = getRandomPeon(50, 50, true);
-            if (peon != null && peon.job == null && peon.getType() == 0)
-            {
-                TargetFilter noMobFilter = new TargetFilter()
-                {
-                    public boolean accepts(Entity e)
-                    {
+            if (peon != null && peon.job == null && peon.getType() == 0) {
+                TargetFilter noMobFilter = new TargetFilter() {
+                    public boolean accepts(Entity e) {
                         return !(e instanceof Peon || e instanceof Monster);
-                    }                    
+                    }
                 };
-                if (type == HouseType.MASON)
-                {
+                if (type == HouseType.MASON) {
                     peon.setJob(new Job.Gather(Resources.RESOURCE_ROCK_ID, this));
-                }
-                else if (type == HouseType.WOODCUTTER)
-                {
+                } else if (type == HouseType.WOODCUTTER) {
                     peon.setJob(new Job.Gather(Resources.RESOURCE_WOOD_ID, this));
-                }
-                else if (type == HouseType.WINDMILL)
-                {
+                } else if (type == HouseType.WINDMILL) {
                     peon.setJob(new Job.Gather(Resources.RESOURCE_FOOD_ID, this));
-                }
-                else if (type == HouseType.PLANTER)
-                {
-                    if (getRandomTarget(6, 40, noMobFilter)==null)
+                } else if (type == HouseType.PLANTER) {
+                    if (getRandomTarget(6, 40, noMobFilter) == null)
                         peon.setJob(new Job.Plant(this, 0));
-                }
-                else if (type == HouseType.FARM)
-                {
-                    if (getRandomTarget(6, 40, noMobFilter)==null)
+                } else if (type == HouseType.FARM) {
+                    if (getRandomTarget(6, 40, noMobFilter) == null)
                         peon.setJob(new Job.Plant(this, 1));
                 }
             }
 
-            if (type == HouseType.GUARDPOST)
-            {
+            if (type == HouseType.GUARDPOST) {
                 peon = getRandomPeon(80, 80, true);
-                if (peon != null && peon.job == null && (peon.getType() == 0 && random.nextInt(2)==0))
-                {
+                if (peon != null && peon.job == null && (peon.getType() == 0 && random.nextInt(2) == 0)) {
                     peon.setJob(new Job.Goto(this));
                 }
             }
 
-            if (type == HouseType.BARRACKS && island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= WOOD_PER_WARRIOR)
-            {
+            if (type == HouseType.BARRACKS && island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= WOOD_PER_WARRIOR) {
                 peon = getRandomPeon(80, 80, true);
-                if (peon != null && peon.job == null && peon.getType() == 0)
-                {
+                if (peon != null && peon.job == null && peon.getType() == 0) {
                     peon.setJob(new Job.GotoAndConvert(this));
                 }
             }
 
-            if (type == HouseType.RESIDENCE && island.getPopulation() < island.getPopulationCap() && island.getResources().getFood() >= FOOD_PER_PEON && random.nextInt(20) == 0)
-            {
+            if (type == HouseType.RESIDENCE && island.getPopulation() < island.getPopulationCap() && island.getResources().getFood() >= FOOD_PER_PEON && random.nextInt(20) == 0) {
                 double xt = x + (random.nextDouble() * 2 - 1) * 9;
                 double yt = y + (random.nextDouble() * 2 - 1) * 9;
 
                 peon = new Peon(xt, yt, 0);
-                if (island.isFree(peon.getX(), peon.getY(), peon.getR()))
-                {
+                if (island.isFree(peon.getX(), peon.getY(), peon.getR())) {
                     puff();
                     island.getResources().decreaseFood(FOOD_PER_PEON);
                     island.addEntity(peon);
@@ -194,31 +153,24 @@ public class House extends Entity
         }
     }
 
-    public void destroy()
-    {
-        if (type == HouseType.RESIDENCE)
-        {
+    public void destroy() {
+        if (type == HouseType.RESIDENCE) {
             island.decreasePopulationCap(POPULATION_PER_RESIDENCE);
         }
-        if (type == HouseType.BARRACKS)
-        {
+        if (type == HouseType.BARRACKS) {
             island.decreaseWarriorPopulationCap(POPULATION_PER_RESIDENCE);
         }
     }
 
-    private Peon getRandomPeon(double r, double s, final boolean mustBeFree)
-    {
-        TargetFilter peonFilter = new TargetFilter()
-        {
-            public boolean accepts(Entity e)
-            {
+    private Peon getRandomPeon(double r, double s, final boolean mustBeFree) {
+        TargetFilter peonFilter = new TargetFilter() {
+            public boolean accepts(Entity e) {
                 return e.isAlive() && (e instanceof Peon) && (!mustBeFree || ((Peon) e).job == null);
             }
         };
 
         Entity e = getRandomTarget(r, s, peonFilter);
-        if (e instanceof Peon)
-        {
+        if (e instanceof Peon) {
             Peon peon = (Peon) e;
             return peon;
         }
@@ -233,8 +185,7 @@ public class House extends Entity
 
         if (buildTime < buildDuration) {
             g.drawImage(bitmaps.getHouses()[0][buildTime * 6 / buildDuration], xPos, yPos, null);
-        }
-        else {
+        } else {
             g.drawImage(type.getImage(bitmaps), xPos, yPos, null);
         }
 
@@ -264,13 +215,11 @@ public class House extends Entity
 
     }
 
-    public void puff()
-    {
+    public void puff() {
         island.addEntity(new Puff(x, y));
     }
 
-    public void sell()
-    {
+    public void sell() {
         island.getResources().increaseWood(type.getWood() * 3 * hp / (maxHp * 4));
         island.getResources().increaseRock(type.getRock() * 3 * hp / (maxHp * 4));
         die();
