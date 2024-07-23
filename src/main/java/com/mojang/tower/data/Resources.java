@@ -2,26 +2,23 @@ package com.mojang.tower.data;
 
 import com.mojang.tower.model.HouseType;
 
-public class Resources {
-    public static final int WOOD = 0;
-    public static final int ROCK = 1;
-    public static final int FOOD = 2;
-
+public class Resources
+{
+    public static final int RESOURCE_WOOD_ID = 0;
+    public static final int RESOURCE_ROCK_ID = 1;
+    public static final int RESOURCE_FOOD_ID = 2;
+    
     private int wood = 100;
     private int rock = 100;
     private int food = 100;
-
-    public void add(int resourceId, int count) {
-        switch (resourceId) {
-            case WOOD:
-                wood += count;
-                break;
-            case ROCK:
-                rock += count;
-                break;
-            case FOOD:
-                food += count;
-                break;
+    
+    public void add(int resourceId, int count)
+    {
+        switch(resourceId)
+        {
+            case RESOURCE_WOOD_ID: wood+=count; break;
+            case RESOURCE_ROCK_ID: rock+=count; break;
+            case RESOURCE_FOOD_ID: food+=count; break;
         }
     }
 

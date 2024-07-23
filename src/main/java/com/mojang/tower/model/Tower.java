@@ -68,6 +68,6 @@ public class Tower extends Entity {
     }
 
     public boolean givesResource(int resourceId) {
-        return resourceId == Resources.ROCK;
+        return resourceId == Resources.RESOURCE_ROCK_ID;
     }
 }
