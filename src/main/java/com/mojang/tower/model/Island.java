@@ -9,14 +9,25 @@ import com.mojang.tower.ui.TowerComponent;
 import java.awt.image.*;
 import java.util.*;
 
-public class Island
-{
+public class Island {
+
+    private static final int IMAGE_SIZE = 256;
+    private static final double SCALING_FACTOR = 1.5;
+    private static final int ROCK_COUNT = 100;
+    private static final int FOREST_COUNT = 200;
+    private static final int TOWER_TRIAL_COUNT = 1;
+    private static final int PEON_COUNT = 10;
+    private static final double ROTATION_OFFSET_X = 40;
+    private static final double ROTATION_OFFSET_Y = -120;
+    private static final int TREE_GROWTH_VARIANCE = 16 * Tree.GROW_SPEED;
+    private static final int INITIAL_RANDOM_SEED = 8844;
+
     private TowerComponent tower;
     private BufferedImage image;
     private int[] pixels;
 
     private List<Entity> entities = new ArrayList<Entity>();
-    private Random random = new Random(8844);
+    private Random random = new Random(INITIAL_RANDOM_SEED);
 
     private Resources resources = new Resources();
 
@@ -34,167 +45,140 @@ public class Island
 
         pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
 
-        for (int i = 0; i < 1;)
-        {
-            double x = (random.nextDouble() * 256 - 128) * 1.5;
-            double y = (random.nextDouble() * 256 - 128) * 1.5;
+        for (int i = 0; i < TOWER_TRIAL_COUNT; ) {
+            double x = generateRandomCoordinate();
+            double y = generateRandomCoordinate();
 
             Tower t = new Tower(x, y);
-            if (isFree(t.x, t.y, t.r))
-            {
+            if (isFree(t.x, t.y, t.r)) {
                 addEntity(t);
                 i++;
             }
         }
 
-        for (int i = 0; i < 7; i++)
-        {
-            double x = (random.nextDouble() * 256 - 128) * 1.5;
-            double y = (random.nextDouble() * 256 - 128) * 1.5;
+        for (int i = 0; i < 7; i++) {
+            double x = generateRandomCoordinate();
+            double y = generateRandomCoordinate();
             addRocks(x, y);
         }
-        for (int i = 0; i < 20; i++)
-        {
-            double x = (random.nextDouble() * 256 - 128) * 1.5;
-            double y = (random.nextDouble() * 256 - 128) * 1.5;
+
+        for (int i = 0; i < 20; i++) {
+            double x = generateRandomCoordinate();
+            double y = generateRandomCoordinate();
             addForrest(x, y);
         }
 
-        double xStart = 40;
-        double yStart = -120;
+        double xStart = ROTATION_OFFSET_X;
+        double yStart = ROTATION_OFFSET_Y;
         House house = new House(xStart, yStart, HouseType.GUARDPOST);
         house.complete();
         addEntity(house);
 
-        for (int i = 0; i < 10;)
-        {
-            double x = xStart + (random.nextDouble() * 32 - 16);
-            double y = yStart + (random.nextDouble() * 32 - 16);
+        for (int i = 0; i < PEON_COUNT; ) {
+            double x = xStart + generateRandomCoordinateInRange(32);
+            double y = yStart + generateRandomCoordinateInRange(32);
 
             Peon peon = new Peon(x, y, 0);
-            if (isFree(peon.x, peon.y, peon.r))
-            {
+            if (isFree(peon.x, peon.y, peon.r)) {
                 addEntity(peon);
                 i++;
             }
         }
     }
 
-    private void addRocks(double xo, double yo)
-    {
-        for (int i = 0; i < 100; i++)
-        {
+    private double generateRandomCoordinate() {
+        return (random.nextDouble() * 256 - 128) * SCALING_FACTOR;
+    }
+
+    private double generateRandomCoordinateInRange(int range) {
+        return random.nextDouble() * range - range / 2.0;
+    }
+
+    private void addRocks(double xo, double yo) {
+        for (int i = 0; i < ROCK_COUNT; i++) {
             double x = xo + random.nextGaussian() * 10;
             double y = yo + random.nextGaussian() * 10;
             Rock rock = new Rock(x, y);
 
-            if (isFree(rock.x, rock.y, rock.r))
-            {
+            if (isFree(rock.x, rock.y, rock.r)) {
                 addEntity(rock);
             }
         }
     }
 
-    private void addForrest(double xo, double yo)
-    {
-        for (int i = 0; i < 200; i++)
-        {
+    private void addForrest(double xo, double yo) {
+        for (int i = 0; i < FOREST_COUNT; i++) {
             double x = xo + random.nextGaussian() * 20;
             double y = yo + random.nextGaussian() * 20;
-            Tree tree = new Tree(x, y, random.nextInt(16 * Tree.GROW_SPEED));
+            Tree tree = new Tree(x, y, random.nextInt(TREE_GROWTH_VARIANCE));
 
-            if (isFree(tree.x, tree.y, tree.r))
-            {
+            if (isFree(tree.x, tree.y, tree.r)) {
                 addEntity(tree);
             }
         }
     }
 
-    public void addEntity(Entity entity)
-    {
+    public void addEntity(Entity entity) {
         entity.init(this, tower.getBitmaps());
         entities.add(entity);
         entity.tick();
     }
 
-    public boolean isFree(double x, double y, double r)
-    {
+    public boolean isFree(double x, double y, double r) {
         return isFree(x, y, r, null);
     }
 
-    public boolean isFree(double x, double y, double r, Entity source)
-    {
+    public boolean isFree(double x, double y, double r, Entity source) {
         if (!isOnGround(x, y)) return false;
-        for (int i = 0; i < entities.size(); i++)
-        {
-            Entity e = entities.get(i);
-            if (e != source)
-            {
-                if (e.collides(x, y, r)) return false;
-            }
-        }
-        return true;
+        return entities.stream()
+                .filter(e -> e != source && e.collides(x, y, r))
+                .findFirst()
+                .isEmpty();
     }
 
-    public Entity getEntityAt(double x, double y, double r, TargetFilter filter)
-    {
+    public Entity getEntityAt(double x, double y, double r, TargetFilter filter) {
         return getEntityAt(x, y, r, filter, null);
     }
 
-    public Entity getEntityAt(double x, double y, double r, TargetFilter filter, Entity exception)
-    {
-        double closest = 1000000;
-        Entity closestEntity = null;
+    public Entity getEntityAt(double x, double y, double r, TargetFilter filter, Entity exception) {
 
-        for (int i = 0; i < entities.size(); i++)
-        {
-            Entity e = entities.get(i);
-            if (e == exception) continue;
-            if (filter != null && !filter.accepts(e)) continue;
-
-            if (e.collides(x, y, r))
-            {
-                double dist = (e.x - x) * (e.x - x) + (e.y - y) * (e.y - y);
-                if (dist < closest)
-                {
-                    closest = dist;
-                    closestEntity = e;
-                }
-            }
-        }
-
-        return closestEntity;
+        return entities.stream()
+                .filter(e -> e != exception && (filter == null || filter.accepts(e)))
+                .filter(e -> e.collides(x, y, r))
+                .min(Comparator.comparingDouble(e -> distanceSquared(e.x, e.y, x, y)))
+                .orElse(null);
     }
 
-    public void tick()
-    {
-        if (monsterPopulation<0)
-        {
+    private double distanceSquared(double x1, double y1, double x2, double y2) {
+        double dx = x1 - x2;
+        double dy = y1 - y2;
+        return dx * dx + dy * dy;
+    }
+
+    public void tick() {
+        if (monsterPopulation < 0) {
             System.out.println("Monster population is less than 0!!");
             monsterPopulation = 0;
         }
-        
-        for (int i = 0; i < entities.size(); i++)
-        {
+
+        for (int i = 0; i < entities.size(); i++) {
             Entity entity = entities.get(i);
             entity.tick();
             if (!entity.isAlive()) entities.remove(i--);
         }
     }
 
-    public boolean isOnGround(double x, double y)
-    {
-        x /= 1.5;
-        y /= 1.5;
+    public boolean isOnGround(double x, double y) {
+        x /= SCALING_FACTOR;
+        y /= SCALING_FACTOR;
         int xp = (int) (x + 128);
         int yp = (int) (y + 128);
-        if (xp < 0 || yp < 0 || xp >= 256 || yp >= 256) return false;
+        if (xp < 0 || yp < 0 || xp >= IMAGE_SIZE || yp >= IMAGE_SIZE) return false;
 
         return (pixels[yp << 8 | xp] >>> 24) > 128;
     }
 
-    public Entity getEntityAtMouse(double x, double y, TargetFilter filter)
-    {
+    public Entity getEntityAtMouse(double x, double y, TargetFilter filter) {
         x *= 0.5;
         y *= -1;
         double sin = Math.sin(rot);
@@ -205,20 +189,15 @@ public class Island
         return getEntityAt(xp, yp, 8, filter);
     }
 
-    public boolean canPlaceHouse(double x, double y, HouseType type)
-    {
-        if (resources.canAfford(type))
-        {
+    public boolean canPlaceHouse(double x, double y, HouseType type) {
+        if (resources.canAfford(type)) {
             x *= 0.5;
             y *= -1;
-            double sin = Math.sin(rot);
-            double cos = Math.cos(rot);
-            double xp = x * cos + y * sin;
-            double yp = x * sin - y * cos;
+            double xp = rotateX(x, y);
+            double yp = rotateY(x, y);
 
             House house = new House(xp, yp, type);
-            if (isFree(house.x, house.y, house.r))
-            {
+            if (isFree(house.x, house.y, house.r)) {
                 return true;
             }
         }
@@ -226,20 +205,15 @@ public class Island
         return false;
     }
 
-    public void placeHouse(double x, double y, HouseType type)
-    {
-        if (resources.canAfford(type))
-        {
+    public void placeHouse(double x, double y, HouseType type) {
+        if (resources.canAfford(type)) {
             x *= 0.5;
             y *= -1;
-            double sin = Math.sin(rot);
-            double cos = Math.cos(rot);
-            double xp = x * cos + y * sin;
-            double yp = x * sin - y * cos;
+            double xp = rotateX(x, y);
+            double yp = rotateY(x, y);
 
             House house = new House(xp, yp, type);
-            if (isFree(house.x, house.y, house.r))
-            {
+            if (isFree(house.x, house.y, house.r)) {
                 Sounds.play(new Sound.Plant());
                 addEntity(house);
                 resources.charge(type);
@@ -247,8 +221,15 @@ public class Island
         }
     }
 
-    public void win()
-    {
+    private double rotateX(double x, double y) {
+        return x * Math.cos(rot) + y * Math.sin(rot);
+    }
+
+    private double rotateY(double x, double y) {
+        return x * Math.sin(rot) - y * Math.cos(rot);
+    }
+
+    public void win() {
         tower.win();
     }
 

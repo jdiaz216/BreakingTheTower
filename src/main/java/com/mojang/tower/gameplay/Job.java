@@ -12,212 +12,169 @@ import com.mojang.tower.sound.Sounds;
 
 import java.util.Random;
 
-public class Job
-{
+public class Job {
     protected Random random = new Random();
 
-    public static class Goto extends Job
-    {
+    public static class Goto extends Job {
         private Entity target;
 
-        public Goto(Entity target)
-        {
+        public Goto(Entity target) {
             this.target = target;
             bonusRadius = 15;
         }
 
-        public boolean isValidTarget(Entity e)
-        {
+        public boolean isValidTarget(Entity e) {
             return e == target;
         }
 
-        public void arrived()
-        {
+        public void arrived() {
             peon.setJob(null);
         }
     }
-    
-    public static class GotoAndConvert extends Job
-    {
+
+    public static class GotoAndConvert extends Job {
         private Entity target;
 
-        public GotoAndConvert(Entity target)
-        {
+        public GotoAndConvert(Entity target) {
             this.target = target;
         }
 
-        public boolean isValidTarget(Entity e)
-        {
-            return e  == target;
+        public boolean isValidTarget(Entity e) {
+            return e == target;
         }
 
-        public void arrived()
-        {
-            if (island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= House.WOOD_PER_WARRIOR)
-            {
+        public void arrived() {
+            if (island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= House.WOOD_PER_WARRIOR) {
                 island.setWarriorPopulation(island.getWarriorPopulation() + 1);
                 island.getResources().decreaseWood(House.WOOD_PER_WARRIOR);
                 peon.setType(1);
-                ((House)target).puff();
+                ((House) target).puff();
                 Sounds.play(new Sound.SpawnWarrior());
             }
             peon.setJob(null);
         }
     }
-    
-    public static class Hunt extends Job
-    {
+
+    public static class Hunt extends Job {
         private Monster target;
 
-        public Hunt(Monster target)
-        {
+        public Hunt(Monster target) {
             this.target = target;
             bonusRadius = 5;
         }
 
-        public boolean isValidTarget(Entity e)
-        {
+        public boolean isValidTarget(Entity e) {
             return e instanceof Monster;
         }
 
-        public void arrived()
-        {
+        public void arrived() {
             target.fight(peon);
         }
-    }    
+    }
 
 
-    public static class Build extends Job
-    {
+    public static class Build extends Job {
         private House target;
 
-        public Build(House target)
-        {
+        public Build(House target) {
             this.target = target;
         }
 
-        public boolean isValidTarget(Entity e)
-        {
+        public boolean isValidTarget(Entity e) {
             return e == target;
         }
 
-        public void arrived()
-        {
+        public void arrived() {
             if (target.build()) peon.setJob(null);
         }
     }
 
-    public static class Plant extends Job
-    {
+    public static class Plant extends Job {
         private Entity target;
         private boolean hasSeed = false;
         private Entity toPlant;
 
-        public Plant(Entity target, int seed)
-        {
+        public Plant(Entity target, int seed) {
             this.target = target;
 
-            if (seed==0)
-            {
+            if (seed == 0) {
                 toPlant = new Tree(0, 0, 0);
-            }
-            else
-            {
+            } else {
                 toPlant = new FarmPlot(0, 0, 0);
             }
         }
 
-        public boolean isValidTarget(Entity e)
-        {
+        public boolean isValidTarget(Entity e) {
             if (!hasSeed)
                 return e == target;
             else
                 return false;
         }
 
-        public boolean hasTarget()
-        {
+        public boolean hasTarget() {
             if (!hasSeed) return super.hasTarget();
-            
+
             double xt = peon.getX() + Math.cos(peon.getRot()) * 10;
             double yt = peon.getY() + Math.sin(peon.getRot()) * 10;
             toPlant.setPos(xt, yt);
-            if (island.isFree(toPlant.getX(), toPlant.getY(), 8))
-            {
+            if (island.isFree(toPlant.getX(), toPlant.getY(), 8)) {
                 island.addEntity(toPlant);
                 peon.setJob(null);
             }
-            
+
             return false;
         }
 
-        public void arrived()
-        {
-            if (!hasSeed)
-            {
+        public void arrived() {
+            if (!hasSeed) {
                 hasSeed = true;
                 bonusRadius = 15;
                 boreTime = 300;
-            }
-            else
-            {
+            } else {
             }
         }
 
-        public int getCarried()
-        {
+        public int getCarried() {
             return hasSeed ? 3 : -1;
         }
     }
 
-    public static class Gather extends Job
-    {
+    public static class Gather extends Job {
         boolean hasResource = false;
         public int resourceId = 0;
         private House returnTo;
-        
 
-        public Gather(int id, House returnTo)
-        {
+
+        public Gather(int id, House returnTo) {
             resourceId = id;
             this.returnTo = returnTo;
         }
 
-        public int getCarried()
-        {
+        public int getCarried() {
             return hasResource ? resourceId : -1;
         }
 
-        public boolean isValidTarget(Entity e)
-        {
-            if (!hasResource && e.givesResource(resourceId))
-            {
+        public boolean isValidTarget(Entity e) {
+            if (!hasResource && e.givesResource(resourceId)) {
                 return true;
             }
-            if (hasResource && e.acceptsResource(resourceId))
-            {
+            if (hasResource && e.acceptsResource(resourceId)) {
                 return true;
             }
             return false;
         }
 
-        public void arrived()
-        {
-            if (!hasResource && target != null && target.givesResource(resourceId))
-            {
-                if (target.gatherResource(resourceId))
-                {
+        public void arrived() {
+            if (!hasResource && target != null && target.givesResource(resourceId)) {
+                if (target.gatherResource(resourceId)) {
                     hasResource = true;
                     target = returnTo;
                     peon.increaseRot(Math.PI);
 //                    tryFindTarget();
                 }
                 boreTime = 1000;
-            }
-            else if (hasResource && target != null && target.acceptsResource(resourceId))
-            {
-                if (target.submitResource(resourceId))
-                {
+            } else if (hasResource && target != null && target.acceptsResource(resourceId)) {
+                if (target.submitResource(resourceId)) {
                     hasResource = false;
                     target = null;
                     island.getResources().add(resourceId, 1);
@@ -234,47 +191,36 @@ public class Job
     protected int bonusRadius = 2;
     protected int boreTime = 500;
 
-    public void init(Island island, Peon peon)
-    {
+    public void init(Island island, Peon peon) {
         this.island = island;
         this.peon = peon;
     }
 
-    public final void tick()
-    {
-        if (boreTime>0)
-        {
-            if (--boreTime==0) peon.setJob(null);
+    public final void tick() {
+        if (boreTime > 0) {
+            if (--boreTime == 0) peon.setJob(null);
         }
     }
 
-    public boolean isValidTarget(Entity e)
-    {
+    public boolean isValidTarget(Entity e) {
         return false;
     }
 
-    protected void tryFindTarget()
-    {
-        for (int i = 0; i < 5; i++)
-        {
+    protected void tryFindTarget() {
+        for (int i = 0; i < 5; i++) {
             Entity e = peon.getRandomTarget(10, 80, null);
-            if (e != null && isValidTarget(e))
-            {
-                if (target == null || e.distance(peon) < target.distance(peon))
-                {
+            if (e != null && isValidTarget(e)) {
+                if (target == null || e.distance(peon) < target.distance(peon)) {
                     setTarget(e);
                 }
             }
         }
     }
 
-    public boolean hasTarget()
-    {
+    public boolean hasTarget() {
         Entity e = peon.getRandomTarget(5, 60, null);
-        if (e != null && isValidTarget(e))
-        {
-            if (target == null || e.distance(peon) < target.distance(peon))
-            {
+        if (e != null && isValidTarget(e)) {
+            if (target == null || e.distance(peon) < target.distance(peon)) {
                 setTarget(e);
             }
         }
@@ -287,37 +233,28 @@ public class Job
         return true;
     }
 
-    public void setTarget(Entity e)
-    {
+    public void setTarget(Entity e) {
         target = e;
     }
 
-    public void arrived()
-    {
+    public void arrived() {
     }
 
-    public void cantReach()
-    {
-        if (Math.random() < 0.1)
-        {
+    public void cantReach() {
+        if (Math.random() < 0.1) {
             target = null;
         }
     }
 
-    public void collide(Entity e)
-    {
-        if (isValidTarget(e))
-        {
+    public void collide(Entity e) {
+        if (isValidTarget(e)) {
             setTarget(e);
-        }
-        else
-        {
+        } else {
             cantReach();
         }
     }
 
-    public int getCarried()
-    {
+    public int getCarried() {
         return -1;
     }
 
