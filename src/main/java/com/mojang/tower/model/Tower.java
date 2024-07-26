@@ -18,13 +18,17 @@ public class Tower extends Entity {
 
     public void tick() {
         if (random.nextInt(100) == 0 && island.getMonsterPopulation() < minMonsters) {
-            double xt = x + (random.nextDouble() * 2 - 1) * (r + 5);
-            double yt = y + (random.nextDouble() * 2 - 1) * (r + 5);
+            spawnMonster();
+        }
+    }
 
-            Monster monster = new Monster(xt, yt);
-            if (island.isFree(monster.x, monster.y, monster.r)) {
-                if (!DEBUG) island.addEntity(monster);
-            }
+    private void spawnMonster() {
+        double xt = x + (random.nextDouble() * 2 - 1) * (r + 5);
+        double yt = y + (random.nextDouble() * 2 - 1) * (r + 5);
+
+        Monster monster = new Monster(xt, yt);
+        if (island.isFree(monster.x, monster.y, monster.r)) {
+            if (!DEBUG) island.addEntity(monster);
         }
     }
 
@@ -32,6 +36,10 @@ public class Tower extends Entity {
         int x = (int) (xr - 16);
         int y = -(int) (yr / 2);
 
+        renderTower(g, x, y);
+    }
+
+    private void renderTower(Graphics2D g, int x, int y) {
         for (int i = 0; i < h / 8; i++) {
             g.drawImage(bitmaps.getTowerMid(), x, y - 8 - i * 8, null);
         }
@@ -43,28 +51,32 @@ public class Tower extends Entity {
     public boolean gatherResource(int resourceId) {
         stamina -= 64;
         if (stamina <= 0) {
-            for (int i = 0; i < 1; ) {
-                double xt = x + (random.nextDouble() * 2 - 1) * (r + 5);
-                double yt = y + (random.nextDouble() * 2 - 1) * (r + 5);
-
-                Monster monster = new Monster(xt, yt);
-                if (island.isFree(monster.x, monster.y, monster.r)) {
-                    if (!DEBUG) island.addEntity(monster);
-                    i++;
-                }
-            }
-            stamina += staminaPerLevel;
-            if (DEBUG) {
-                stamina = 0;
-            }
-            if (h % 20 == 0) minMonsters++;
-            if (--h <= 4) {
-                island.win();
-                alive = false;
-            }
+            gatherResources();
             return true;
         }
         return false;
+    }
+
+    private void gatherResources() {
+        for (int i = 0; i < 1; ) {
+            double xt = x + (random.nextDouble() * 2 - 1) * (r + 5);
+            double yt = y + (random.nextDouble() * 2 - 1) * (r + 5);
+
+            Monster monster = new Monster(xt, yt);
+            if (island.isFree(monster.x, monster.y, monster.r)) {
+                if (!DEBUG) island.addEntity(monster);
+                i++;
+            }
+        }
+        stamina += staminaPerLevel;
+        if (DEBUG) {
+            stamina = 0;
+        }
+        if (h % 20 == 0) minMonsters++;
+        if (--h <= 4) {
+            island.win();
+            alive = false;
+        }
     }
 
     public boolean givesResource(int resourceId) {
