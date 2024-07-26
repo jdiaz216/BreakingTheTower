@@ -1,11 +1,17 @@
 package com.mojang.tower.sound;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.sampled.*;
 
 public class Sounds implements Runnable {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Sounds.class);
+
     public static Sounds instance = new Sounds();
     private boolean soundAvailable = true;
     private static boolean isMute = false;
@@ -62,6 +68,7 @@ public class Sounds implements Runnable {
                 try {
                     Thread.sleep(2);
                 } catch (InterruptedException e) {
+                    LOGGER.error("Sound Thread Interrupted", e);
                 }
             }
 

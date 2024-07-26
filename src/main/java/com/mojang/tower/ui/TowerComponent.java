@@ -9,6 +9,8 @@ import com.mojang.tower.data.Bitmaps;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
 import com.mojang.tower.model.TargetFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -18,6 +20,8 @@ import java.io.IOException;
 import java.util.Collections;
 
 public class TowerComponent extends Canvas implements Runnable, MouseListener, MouseMotionListener, PrincipalComponent {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TowerComponent.class);
 
     public static final int TICKS_PER_SECOND = 30;
     private static final int MAX_TICKS_PER_FRAME = 10;
@@ -75,6 +79,8 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
     }
 
     public void start() {
+        LOGGER.info("Starting the thread");
+
         thread = new Thread(this);
         thread.start();
     }
@@ -84,6 +90,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         try {
             if (thread != null) thread.join();
         } catch (InterruptedException e) {
+            LOGGER.error("Thread was interrupted", e);
         }
     }
 
@@ -91,7 +98,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         try {
             bitmaps.loadAll();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error when trying to initialize images", e);
         }
 
         island = new Island(this, bitmaps.getIsland());
@@ -122,7 +129,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             try {
                 Thread.sleep(paused ? 200 : 4);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                LOGGER.error("Thread was interrupted", e);
             }
         }
     }
@@ -150,7 +157,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
         tickCount++;
         if (tickCount % TICKS_PER_SECOND == 0) {
-            //            System.out.println(frames + " fps");
+            LOGGER.info(frames + " fps");
             frames = 0;
         }
 
