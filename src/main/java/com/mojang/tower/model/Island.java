@@ -4,6 +4,8 @@ import com.mojang.tower.data.HouseType;
 import com.mojang.tower.data.Resources;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Random;
 
 public class Island {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Island.class);
 
     private static final int IMAGE_SIZE = 256;
     private static final double SCALING_FACTOR = 1.5;
@@ -160,7 +164,7 @@ public class Island {
 
     public void tick() {
         if (monsterPopulation < 0) {
-            System.out.println("Monster population is less than 0!!");
+            LOGGER.info("Monster population is less than 0!!");
             monsterPopulation = 0;
         }
 

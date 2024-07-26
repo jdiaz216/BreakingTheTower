@@ -1,21 +1,18 @@
 package com.mojang.tower.data;
 
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Transparency;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.imageio.ImageIO;
 
 public class Bitmaps implements Serializable {
 
-    private static final Logger LOGGER = Logger.getLogger(Bitmaps.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(Bitmaps.class);
 
     private static final String RESOURCE_PATH = "res/";
     private static final String LOGO_PATH = RESOURCE_PATH + "logo.gif";
@@ -97,7 +94,7 @@ public class Bitmaps implements Serializable {
             island.setRGB(0, 0, 256, 256, pixels, 0, 256);
 
         } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to load images", e);
+            LOGGER.error("Failed to load images", e);
         }
 
     }
@@ -111,7 +108,7 @@ public class Bitmaps implements Serializable {
             GraphicsConfiguration gc = screen.getDefaultConfiguration();
             newImage = gc.createCompatibleImage(w, h, Transparency.BITMASK);
         } catch (Exception e) {
-            LOGGER.log(Level.WARNING, "Failed to create compatible image, falling back to default", e);
+            LOGGER.error("Failed to create compatible image, falling back to default", e);
         }
 
         if (newImage == null) {
