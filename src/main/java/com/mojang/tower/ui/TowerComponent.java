@@ -2,11 +2,13 @@ package com.mojang.tower.ui;
 
 import com.mojang.tower.model.Entity;
 import com.mojang.tower.model.House;
-import com.mojang.tower.model.HouseType;
+import com.mojang.tower.data.HouseType;
 import com.mojang.tower.model.Island;
+import com.mojang.tower.model.PrincipalComponent;
+import com.mojang.tower.data.Bitmaps;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
-import com.mojang.tower.gameplay.TargetFilter;
+import com.mojang.tower.model.TargetFilter;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -15,7 +17,8 @@ import java.awt.image.*;
 import java.io.IOException;
 import java.util.Collections;
 
-public class TowerComponent extends Canvas implements Runnable, MouseListener, MouseMotionListener {
+public class TowerComponent extends Canvas implements Runnable, MouseListener, MouseMotionListener, PrincipalComponent {
+
     public static final int TICKS_PER_SECOND = 30;
     private static final int MAX_TICKS_PER_FRAME = 10;
     private static final long serialVersionUID = 1L;
@@ -412,25 +415,6 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
     public void mouseMoved(MouseEvent me) {
         xMouse = me.getX();
         yMouse = me.getY();
-    }
-
-
-    public static void main(String[] args) {
-        final TowerComponent tower = new TowerComponent(512, 320);
-
-        Frame frame = new Frame("Breaking the Tower");
-        frame.add(tower);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent we) {
-                tower.stop();
-                System.exit(0);
-            }
-        });
-        frame.setVisible(true);
-        tower.start();
     }
 
     public void win() {

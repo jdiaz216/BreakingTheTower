@@ -1,12 +1,5 @@
-package com.mojang.tower.gameplay;
+package com.mojang.tower.model;
 
-import com.mojang.tower.model.Entity;
-import com.mojang.tower.model.FarmPlot;
-import com.mojang.tower.model.House;
-import com.mojang.tower.model.Island;
-import com.mojang.tower.model.Monster;
-import com.mojang.tower.model.Peon;
-import com.mojang.tower.model.Tree;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
 

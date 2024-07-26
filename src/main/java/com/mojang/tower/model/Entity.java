@@ -1,7 +1,6 @@
 package com.mojang.tower.model;
 
-import com.mojang.tower.ui.Bitmaps;
-import com.mojang.tower.gameplay.TargetFilter;
+import com.mojang.tower.data.Bitmaps;
 
 import java.awt.Graphics2D;
 import java.util.Random;

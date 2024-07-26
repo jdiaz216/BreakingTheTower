@@ -1,13 +1,16 @@
 package com.mojang.tower.model;
 
+import com.mojang.tower.data.HouseType;
 import com.mojang.tower.data.Resources;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
-import com.mojang.tower.gameplay.TargetFilter;
-import com.mojang.tower.ui.TowerComponent;
 
-import java.awt.image.*;
-import java.util.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
 
 public class Island {
 
@@ -22,14 +25,14 @@ public class Island {
     private static final int TREE_GROWTH_VARIANCE = 16 * Tree.GROW_SPEED;
     private static final int INITIAL_RANDOM_SEED = 8844;
 
-    private TowerComponent tower;
-    private BufferedImage image;
-    private int[] pixels;
+    private final PrincipalComponent tower;
+    private final BufferedImage image;
+    private final int[] pixels;
 
-    private List<Entity> entities = new ArrayList<Entity>();
-    private Random random = new Random(INITIAL_RANDOM_SEED);
+    private List<Entity> entities = new ArrayList<>();
+    private final Random random = new Random(INITIAL_RANDOM_SEED);
 
-    private Resources resources = new Resources();
+    private final Resources resources = new Resources();
 
     private double rot;
     private int population = 0;
@@ -39,7 +42,7 @@ public class Island {
     private int warriorPopulation = 0;
     private int warriorPopulationCap = 0;
 
-    public Island(TowerComponent tower, BufferedImage image) {
+    public Island(PrincipalComponent tower, BufferedImage image) {
         this.tower = tower;
         this.image = image;
 
@@ -231,10 +234,6 @@ public class Island {
 
     public void win() {
         tower.win();
-    }
-
-    public TowerComponent getTower() {
-        return tower;
     }
 
     public BufferedImage getImage() {

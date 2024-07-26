@@ -2,8 +2,7 @@ package com.mojang.tower.model;
 
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
-import com.mojang.tower.gameplay.TargetFilter;
-import com.mojang.tower.ui.Bitmaps;
+import com.mojang.tower.data.Bitmaps;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

@@ -1,7 +1,4 @@
-package com.mojang.tower.model;
-
-import com.mojang.tower.data.Resources;
-import com.mojang.tower.ui.Bitmaps;
+package com.mojang.tower.data;
 
 import java.awt.image.BufferedImage;
 

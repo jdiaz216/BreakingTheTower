@@ -1,4 +1,4 @@
-package com.mojang.tower.gameplay;
+package com.mojang.tower.model;
 
 import com.mojang.tower.model.Entity;
 
