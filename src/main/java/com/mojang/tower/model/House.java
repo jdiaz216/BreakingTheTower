@@ -1,8 +1,7 @@
 package com.mojang.tower.model;
 
+import com.mojang.tower.data.HouseType;
 import com.mojang.tower.data.Resources;
-import com.mojang.tower.gameplay.Job;
-import com.mojang.tower.gameplay.TargetFilter;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
 

@@ -1,7 +1,5 @@
 package com.mojang.tower.data;
 
-import com.mojang.tower.model.HouseType;
-
 public class Resources
 {
     public static final int RESOURCE_WOOD_ID = 0;
