@@ -187,4 +187,9 @@ public class Peon extends Entity {
     public void increaseRot(double value) {
         this.rot += value;
     }
+
+    @Override
+    public boolean isTargetable() {
+        return isAlive();
+    }
 }

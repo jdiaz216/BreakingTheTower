@@ -61,10 +61,10 @@ public class Monster extends Entity {
         if (target == null || random.nextInt(RANDOM_TARGET_CHANCE) == 0) {
             Entity e = getRandomTarget(60, 30, new TargetFilter() {
                 public boolean accepts(Entity e) {
-                    return e.isAlive() && (e instanceof House || e instanceof Peon);
+                    return e.isAlive() && e.isTargetable(); // polymorphism
                 }
             });
-            if (e instanceof House || e instanceof Peon) {
+            if (e != null && e.isTargetable()) { // polymorphism
                 target = e;
             }
         }
