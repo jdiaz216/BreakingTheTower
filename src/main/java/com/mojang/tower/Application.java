@@ -1,5 +1,6 @@
 package com.mojang.tower;
 
+import com.mojang.tower.ui.ITowerComponent;
 import com.mojang.tower.ui.TowerComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,10 @@ public class Application {
 
         LOGGER.info("Starting the game");
 
-        final TowerComponent tower = new TowerComponent(512, 320);
+        ITowerComponent tower = new TowerComponent(512, 320);
 
         Frame frame = new Frame("Breaking the Tower");
-        frame.add(tower);
+        frame.add((Component) tower);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);

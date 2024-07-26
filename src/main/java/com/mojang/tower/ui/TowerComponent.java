@@ -19,7 +19,7 @@ import java.awt.image.*;
 import java.io.IOException;
 import java.util.Collections;
 
-public class TowerComponent extends Canvas implements Runnable, MouseListener, MouseMotionListener, PrincipalComponent {
+public class TowerComponent extends Canvas implements Runnable, MouseListener, MouseMotionListener, PrincipalComponent, ITowerComponent {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TowerComponent.class);
 
