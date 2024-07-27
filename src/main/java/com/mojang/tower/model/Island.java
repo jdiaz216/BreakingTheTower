@@ -9,12 +9,13 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
-public class Island {
+public class Island implements Serializable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Island.class);
 

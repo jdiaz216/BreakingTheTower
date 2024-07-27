@@ -28,31 +28,37 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
     private static final long serialVersionUID = 1L;
 
     private boolean running;
-    private int width, height;
-    private VolatileImage image;
-    private Thread thread;
+    private final int towerWidth;
+    private final int towerHeight;
+    private transient VolatileImage image;
+    private transient Thread thread;
     private int tickCount;
     private int frames;
     private boolean paused;
 
-    private int xMouse = -1, yMouse;
-    private double xRot, xRotA;
+    private int xMouse = -1;
+    private int yMouse;
+    private double xRot;
+    private double xRotA;
 
-    private Bitmaps bitmaps = new Bitmaps();
+    private final Bitmaps bitmaps = new Bitmaps();
     private Island island;
 
     private boolean scrolling = false;
     private double xScrollStart;
 
-    private int xCenter;
-    private int yCenter;
+    private final int xCenter;
+    private final int yCenter;
     private int selectedHouseType = 0;
-    private boolean titleScreen = true, won = false;
-    private int gameTime = 0, winScore = 0, wonTime;
+    private boolean titleScreen = true;
+    private boolean won = false;
+    private int gameTime = 0;
+    private int winScore = 0;
+    private int wonTime;
 
     public TowerComponent(int width, int height) {
-        this.width = width;
-        this.height = height;
+        this.towerWidth = width;
+        this.towerHeight = height;
         setSize(width * 2, height * 2);
         addMouseMotionListener(this);
         addMouseListener(this);
@@ -93,6 +99,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             bitmaps.loadAll();
         } catch (IOException e) {
             LOGGER.error("Error when trying to initialize images", e);
+            throw new RuntimeException(e);
         }
 
         island = new Island(this, bitmaps.getIsland());
@@ -100,14 +107,14 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
     public void run() {
         init();
-        float lastTime = (System.nanoTime() / 1000000) / 1000.0f;
+        float lastTime = (System.nanoTime() / 1000000f) / 1000.0f;
         running = true;
 
         double msPerTick = 1.0 / TICKS_PER_SECOND;
 
         while (running) {
             synchronized (this) {
-                float now = (System.nanoTime() / 1000000) / 1000.0f;
+                float now = (System.nanoTime() / 1000000f) / 1000.0f;
                 int frameTicks = 0;
                 while (now - lastTime > msPerTick) {
                     if (!paused && frameTicks++ < MAX_TICKS_PER_FRAME) tick();
@@ -124,6 +131,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
                 Thread.sleep(paused ? 200 : 4);
             } catch (InterruptedException e) {
                 LOGGER.error("Thread was interrupted", e);
+                throw new RuntimeException(e);
             }
         }
     }
@@ -140,9 +148,9 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
                 double xd = xMouse - xScrollStart;
                 xRotA -= xd / 10000.0;
             } else {
-                if (xMouse >= 0 && yMouse < height * 2 - 20 * 2 && yMouse > 80) {
+                if (xMouse >= 0 && yMouse < towerHeight * 2 - 20 * 2 && yMouse > 80) {
                     if (xMouse < 80) xRotA += 0.02;
-                    if (xMouse > width * 2 - 80) xRotA -= 0.02;
+                    if (xMouse > towerWidth * 2 - 80) xRotA -= 0.02;
                 }
             }
         }
@@ -151,7 +159,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
         tickCount++;
         if (tickCount % TICKS_PER_SECOND == 0) {
-            LOGGER.info(frames + " fps");
+            LOGGER.info("{} fps", frames);
             frames = 0;
         }
 
@@ -170,7 +178,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         }
 
         if (image == null) {
-            image = createVolatileImage(width, height);
+            image = createVolatileImage(towerWidth, towerHeight);
         }
 
         if (bs != null) {
@@ -179,7 +187,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             g.dispose();
 
             Graphics gg = bs.getDrawGraphics();
-            gg.drawImage(image, 0, 0, width * 2, height * 2, 0, 0, width, height, null);
+            gg.drawImage(image, 0, 0, towerWidth * 2, towerHeight * 2, 0, 0, towerWidth, towerHeight, null);
             gg.dispose();
             bs.show();
         }
@@ -203,11 +211,11 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
 
         g.setColor(new Color(0x4379B7));
-        g.fillRect(0, 0, width, height);
+        g.fillRect(0, 0, towerWidth, towerHeight);
 
         if (!titleScreen && !won) {
             g.setColor(new Color(0x87ADFF));
-            g.fillRect(0, 0, width, 40);
+            g.fillRect(0, 0, towerWidth, 40);
         }
 
         double rot = xRot + xRotA * alpha;
@@ -237,12 +245,14 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
         if (!titleScreen && !won) {
             if (selectedHouseType >= 0) {
-                boolean canPlace = island.canPlaceHouse(xMouse - xCenter * 2, yMouse - yCenter * 2, HouseType.houseTypes[selectedHouseType]);
+                boolean canPlace = island.canPlaceHouse(xMouse - xCenter * 2d, yMouse - yCenter * 2d, HouseType.houseTypes[selectedHouseType]);
                 if (canPlace) {
                     g.drawImage(HouseType.houseTypes[selectedHouseType].getImage(bitmaps), xMouse / 2 - xCenter - 8, yMouse / 2 - yCenter - 11, null);
                 }
             } else {
-                Entity e = island.getEntityAtMouse(xMouse - xCenter * 2, yMouse - yCenter * 2 + 3, new TargetFilter() {
+                Entity e = island.getEntityAtMouse(xMouse - xCenter * 2d, yMouse - yCenter * 2d + 3, new TargetFilter() {
+
+                    @Override
                     public boolean accepts(Entity e) {
                         return e instanceof House;
                     }
@@ -258,38 +268,38 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         g.setFont(new Font("Sans-Serif", Font.PLAIN, 10));
 
         if (titleScreen) {
-            g.drawImage(bitmaps.getLogo(), (width - bitmaps.getLogo().getWidth()) / 2, 16, null);
+            g.drawImage(bitmaps.getLogo(), (towerWidth - bitmaps.getLogo().getWidth()) / 2, 16, null);
 
             FontMetrics fm = g.getFontMetrics();
             g.setColor(new Color(0x000000));
             for (int i = 0; i < 2; i++) {
                 if ((tickCount / 10 % 2) == 0) {
                     String str = "Click to start the game";
-                    g.drawString(str, (width - fm.stringWidth(str)) / 2 - i, height - 16 - i);
+                    g.drawString(str, (towerWidth - fm.stringWidth(str)) / 2 - i, towerHeight - 16 - i);
                 }
 
                 g.setColor(new Color(0xffffff));
             }
         } else if (won) {
-            g.drawImage(bitmaps.getWonScreen(), (width - bitmaps.getLogo().getWidth()) / 2, 16, null);
+            g.drawImage(bitmaps.getWonScreen(), (towerWidth - bitmaps.getLogo().getWidth()) / 2, 16, null);
             FontMetrics fm = g.getFontMetrics();
             g.setColor(new Color(0x000000));
             for (int i = 0; i < 2; i++) {
 
                 if (i == 1) g.setColor(new Color(0xffff00));
                 String str = "Time: " + timeStr + ", Score: " + winScore;
-                g.drawString(str, (width - fm.stringWidth(str)) / 2 - i, height * 45 / 100 - i);
+                g.drawString(str, (towerWidth - fm.stringWidth(str)) / 2 - i, towerHeight * 45 / 100 - i);
 
                 if (i == 1) g.setColor(new Color(0xffffff));
                 if (wonTime >= TICKS_PER_SECOND * 3 && (tickCount / 10 % 2) == 0) {
                     str = "Click to continue playing";
-                    g.drawString(str, (width - fm.stringWidth(str)) / 2 - i, height - 16 - i);
+                    g.drawString(str, (towerWidth - fm.stringWidth(str)) / 2 - i, towerHeight - 16 - i);
                 }
 
             }
         } else {
             for (int i = -1; i < HouseType.houseTypes.length; i++) {
-                int x = i * 20 + (width - (HouseType.houseTypes.length + 1) * 20) / 2;
+                int x = i * 20 + (towerWidth - (HouseType.houseTypes.length + 1) * 20) / 2;
                 int y = 4;
                 if (i == -1) {
                     g.drawImage(bitmaps.getDelete(), x, y, null);
@@ -305,7 +315,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             FontMetrics fm = g.getFontMetrics();
             g.setColor(new Color(0x477D8F));
             for (int i = 0; i < 2; i++) {
-                int x = selectedHouseType * 20 + (width - (HouseType.houseTypes.length + 1) * 20) / 2;
+                int x = selectedHouseType * 20 + (towerWidth - (HouseType.houseTypes.length + 1) * 20) / 2;
                 int y = 4 + 28;
 
                 if (selectedHouseType >= 0) {
@@ -323,9 +333,9 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
                 }
 
                 String tmp = "Wood: 9999";
-                g.drawString("Wood: " + island.getResources().getWood(), width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 0);
-                g.drawString("Rock: " + island.getResources().getRock(), width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 1);
-                g.drawString("Food: " + island.getResources().getFood(), width - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 2);
+                g.drawString("Wood: " + island.getResources().getWood(), towerWidth - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 0);
+                g.drawString("Rock: " + island.getResources().getRock(), towerWidth - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 1);
+                g.drawString("Food: " + island.getResources().getFood(), towerWidth - 4 - i - fm.stringWidth(tmp), 12 - i + 11 * 2);
 
                 String pop = "Population: " + island.getPopulation() + " / " + island.getPopulationCap();
                 g.drawString(pop, 4 - i, 12 - i + 11 * 1);
@@ -337,13 +347,15 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
             }
         }
 
-        g.drawImage(bitmaps.getSoundButtons()[Sounds.isMute() ? 1 : 0], width - 20, height - 20, null);
+        g.drawImage(bitmaps.getSoundButtons()[Sounds.isMute() ? 1 : 0], towerWidth - 20, towerHeight - 20, null);
     }
 
     public void mouseClicked(MouseEvent me) {
+        // Don't do anything when this event happens
     }
 
     public void mouseEntered(MouseEvent me) {
+        // Don't do anything when this event happens
     }
 
     public void mouseExited(MouseEvent me) {
@@ -352,7 +364,7 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
 
     public void mousePressed(MouseEvent me) {
         synchronized (this) {
-            if (me.getX() >= width * 2 - 40 && me.getY() >= height * 2 - 40 && me.getX() <= width * 2 - 40 + 32 && me.getY() <= height * 2 - 40 + 32) {
+            if (me.getX() >= towerWidth * 2 - 40 && me.getY() >= towerHeight * 2 - 40 && me.getX() <= towerWidth * 2 - 40 + 32 && me.getY() <= towerHeight * 2 - 40 + 32) {
                 Sounds.setMute(!Sounds.isMute());
                 return;
             }
@@ -371,21 +383,21 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
                 int xm = me.getX() / 2;
                 int ym = me.getY() / 2;
                 for (int i = -1; i < HouseType.houseTypes.length; i++) {
-                    int x = i * 20 + (width - (HouseType.houseTypes.length + 1) * 20) / 2;
+                    int x = i * 20 + (towerWidth - (HouseType.houseTypes.length + 1) * 20) / 2;
                     int y = 4;
 
-                    if (xm >= x - 2 && ym >= y - 2 && xm < x + 18 && ym < y + 18) {
-                        if (selectedHouseType != i) {
+                    if (xm >= x - 2 && ym >= y - 2 && xm < x + 18 && ym < y + 18 && selectedHouseType != i) {
                             selectedHouseType = i;
                             Sounds.play(new Sound.Select());
-                        }
                     }
                 }
 
                 if (selectedHouseType >= 0) {
-                    island.placeHouse(me.getX() - xCenter * 2, me.getY() - yCenter * 2, HouseType.houseTypes[selectedHouseType]);
+                    island.placeHouse(me.getX() - xCenter * 2d, me.getY() - yCenter * 2d, HouseType.houseTypes[selectedHouseType]);
                 } else {
-                    Entity e = island.getEntityAtMouse(xMouse - xCenter * 2, yMouse - yCenter * 2 + 3, new TargetFilter() {
+                    Entity e = island.getEntityAtMouse(xMouse - xCenter * 2d, yMouse - yCenter * 2d + 3, new TargetFilter() {
+
+                        @Override
                         public boolean accepts(Entity e) {
                             return e instanceof House;
                         }
@@ -409,13 +421,16 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
     }
 
     public void mouseDragged(MouseEvent me) {
-        xMouse = me.getX();
-        yMouse = me.getY();
+        setMousePoint(me.getX(), me.getY());
     }
 
     public void mouseMoved(MouseEvent me) {
-        xMouse = me.getX();
-        yMouse = me.getY();
+        setMousePoint(me.getX(), me.getY());
+    }
+
+    private void setMousePoint(int x, int y) {
+        xMouse = x;
+        yMouse = y;
     }
 
     public void win() {
