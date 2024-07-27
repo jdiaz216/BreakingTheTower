@@ -9,7 +9,6 @@ public class Job {
     protected Random random = new Random();
 
     public static class Goto extends Job {
-        private Entity target;
 
         public Goto(Entity target) {
             this.target = target;
@@ -26,7 +25,6 @@ public class Job {
     }
 
     public static class GotoAndConvert extends Job {
-        private Entity target;
 
         public GotoAndConvert(Entity target) {
             this.target = target;
@@ -83,7 +81,6 @@ public class Job {
     }
 
     public static class Plant extends Job {
-        private Entity target;
         private boolean hasSeed = false;
         private Entity toPlant;
 
@@ -197,17 +194,6 @@ public class Job {
 
     public boolean isValidTarget(Entity e) {
         return false;
-    }
-
-    protected void tryFindTarget() {
-        for (int i = 0; i < 5; i++) {
-            Entity e = peon.getRandomTarget(10, 80, null);
-            if (e != null && isValidTarget(e)) {
-                if (target == null || e.distance(peon) < target.distance(peon)) {
-                    setTarget(e);
-                }
-            }
-        }
     }
 
     public boolean hasTarget() {
