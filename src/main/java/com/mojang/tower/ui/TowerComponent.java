@@ -72,12 +72,6 @@ public class TowerComponent extends Canvas implements Runnable, MouseListener, M
         paused = true;
     }
 
-    public void paint(Graphics g) {
-    }
-
-    public void update(Graphics g) {
-    }
-
     public void start() {
         LOGGER.info("Starting the thread");
 
