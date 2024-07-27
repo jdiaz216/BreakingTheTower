@@ -223,4 +223,9 @@ public class House extends Entity {
         island.getResources().increaseRock(type.getRock() * 3 * hp / (maxHp * 4));
         die();
     }
+
+    @Override
+    public boolean isTargetable() {
+        return true;
+    }
 }

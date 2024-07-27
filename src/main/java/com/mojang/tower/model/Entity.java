@@ -110,4 +110,8 @@ public class Entity implements Comparable<Entity> {
     public double getR() {
         return r;
     }
+
+    public boolean isTargetable() {
+        return false;
+    }
 }
