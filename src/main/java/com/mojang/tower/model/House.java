@@ -224,7 +224,8 @@ public class House extends Entity {
         die();
     }
 
+    @Override
     public boolean isTargetable() {
-        return false;
+        return true;
     }
 }

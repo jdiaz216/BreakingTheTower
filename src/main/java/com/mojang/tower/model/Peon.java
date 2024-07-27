@@ -190,6 +190,6 @@ public class Peon extends Entity {
 
     @Override
     public boolean isTargetable() {
-        return isAlive();
+        return true;
     }
 }
