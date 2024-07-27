@@ -53,7 +53,7 @@ public class Monster extends Entity {
 
     private void regenerateHealth() {
         if (hp < maxHp && random.nextInt(HP_REGEN_INTERVAL) == 0) {
-            hp++;
+            hp = Math.min(hp + 1, maxHp); // Ensure hp does not exceed maxHp
         }
     }
 
@@ -138,7 +138,8 @@ public class Monster extends Entity {
     public void fight(Peon peon) {
         if (hp <= 0) return;
         if (random.nextInt(5) == 0) target = peon;
-        if (--hp <= 0) {
+        hp = Math.max(hp - 1, 0); // Ensure hp does not go below zero
+        if (hp == 0) {
             die();
             peon.addXp();
         }
