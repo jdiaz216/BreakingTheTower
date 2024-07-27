@@ -20,22 +20,21 @@ public class Bitmaps implements Serializable {
     private static final String SHEET_PATH = RESOURCE_PATH + "sheet.gif";
     private static final String ISLAND_PATH = RESOURCE_PATH + "island.gif";
 
-    private BufferedImage[] trees;
-    private BufferedImage[] farmPlots;
-    private BufferedImage[] rocks;
-    private BufferedImage[] carriedResources;
-    private BufferedImage[][] peons;
-    private BufferedImage island;
-    private BufferedImage towerTop;
-    private BufferedImage towerMid;
-    private BufferedImage towerBot;
-    private BufferedImage[] smoke;
-    private BufferedImage[] infoPuffs;
-    private BufferedImage[][] houses;
-    private BufferedImage delete, help;
-    private BufferedImage[] soundButtons;
-
-    private BufferedImage logo, wonScreen;
+    private  transient BufferedImage[] trees;
+    private  transient BufferedImage[] farmPlots;
+    private  transient BufferedImage[] rocks;
+    private  transient BufferedImage[] carriedResources;
+    private  transient BufferedImage[][] peons;
+    private  transient BufferedImage island;
+    private  transient BufferedImage towerTop;
+    private  transient BufferedImage towerMid;
+    private  transient BufferedImage towerBot;
+    private  transient BufferedImage[] smoke;
+    private  transient BufferedImage[] infoPuffs;
+    private  transient BufferedImage[][] houses;
+    private  transient BufferedImage delete;
+    private  transient BufferedImage[] soundButtons;
+    private  transient BufferedImage logo, wonScreen;
 
     public void loadAll() throws IOException {
         try {
@@ -61,7 +60,6 @@ public class Bitmaps implements Serializable {
                 carriedResources[i] = clip(src, 32 + 12 * 8 + i * 8, 16 + 16, 8, 8);
 
             delete = clip(src, 32 + 16 * 8 + 3 * 16, 0, 16, 16);
-            help = clip(src, 32 + 16 * 8 + 3 * 16, 16, 16, 16);
             soundButtons = new BufferedImage[2];
             for (int i = 0; i < 2; i++)
                 soundButtons[i] = clip(src, 32 + 16 * 8 + 3 * 16, 32 + i * 16, 16, 16);
@@ -172,10 +170,6 @@ public class Bitmaps implements Serializable {
 
     public BufferedImage getDelete() {
         return delete;
-    }
-
-    public BufferedImage getHelp() {
-        return help;
     }
 
     public BufferedImage[] getSoundButtons() {
