@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 public class Peon extends Entity {
     private static final int[] animSteps = {0, 1, 0, 2};
     private static final int[] animDirs = {2, 0, 3, 1};
+    private static final int TYPE_WARRIOR = 1;
+    private static final int TYPE_REGULAR = 0;
     private double rot = 0;
     private double moveTick = 0;
     private int type;
@@ -36,10 +38,10 @@ public class Peon extends Entity {
     }
 
     public void fight(Monster monster) {
-        if (job == null && (type == 1 || random.nextInt(10) == 0)) {
+        if (job == null && (type == TYPE_WARRIOR || random.nextInt(10) == 0)) {
             setJob(new Job.Hunt(monster));
         }
-        if (type == 0) {
+        if (type == TYPE_REGULAR) {
             monster.fight(this);
             if ((hp -= 4) <= 0) die();
         } else {
@@ -51,7 +53,7 @@ public class Peon extends Entity {
     public void die() {
         Sounds.play(new Sound.Death());
         island.decreasePopulation();
-        if (type == 1) {
+        if (type == TYPE_WARRIOR) {
             island.decreaseWarriorPopulation();
         }
         alive = false;
@@ -67,29 +69,21 @@ public class Peon extends Entity {
             job.tick();
         }
 
-        if (type == 1 || job == null) for (int i = 0; i < 15 && (job == null || job instanceof Job.Goto); i++) {
-            TargetFilter monsterFilter = new TargetFilter() {
-                public boolean accepts(Entity e) {
-                    return e.isAlive() && (e instanceof Monster);
+        if (type == TYPE_WARRIOR || job == null) {
+            for (int i = 0; i < 15 && (job == null || job instanceof Job.Goto); i++) {
+                TargetFilter monsterFilter = new TargetFilter() {
+                    public boolean accepts(Entity e) {
+                        return e.isAlive() && (e instanceof Monster);
+                    }
+                };
+                Entity e = type == TYPE_REGULAR ? getRandomTarget(30, 15, monsterFilter) : getRandomTarget(70, 80, monsterFilter);
+                if (e instanceof Monster) {
+                    setJob(new Job.Hunt((Monster) e));
                 }
-            };
-            Entity e = type == 0 ? getRandomTarget(30, 15, monsterFilter) : getRandomTarget(70, 80, monsterFilter);
-            if (e instanceof Monster) {
-                setJob(new Job.Hunt((Monster) e));
             }
         }
 
-        if (hp < maxHp && random.nextInt(5) == 0) {
-            hp++;
-        }
-        /*        if (target == null || !target.isAlive() || random.nextInt(200) == 0)
-                {
-                    target = getRandomTarget();
-                    if (!(target instanceof Tree))
-                    {
-                        target = null;
-                    }
-                }*/
+        increaseHp();
 
         double speed = 1;
         if (wanderTime == 0 && job != null && job.hasTarget()) {
@@ -101,7 +95,6 @@ public class Peon extends Entity {
                 speed = 0;
             }
             rot = Math.atan2(yd, xd);
-//            rot += (random.nextDouble() - 0.5) * random.nextDouble();
         } else {
             rot += (random.nextDouble() - 0.5) * random.nextDouble() * 2;
         }
@@ -124,15 +117,18 @@ public class Peon extends Entity {
                     job.cantReach();
                 }
             }
-//            rot += random.nextInt(2) * 2 - 1 * Math.PI / 2 + (random.nextDouble() - 0.5);
             rot = (random.nextDouble()) * Math.PI * 2;
             wanderTime = random.nextInt(30) + 3;
         }
 
         moveTick += speed;
-
-
         super.tick();
+    }
+
+    private void increaseHp() {
+        if (hp < maxHp && random.nextInt(5) == 0) {
+            hp++;
+        }
     }
 
     public void render(Graphics2D g, double alpha) {
@@ -153,10 +149,6 @@ public class Peon extends Entity {
         }
 
         Monster.drawHealthBar(g, x, y, hp, maxHp);
-
-        if (level > 0) {
-
-        }
     }
 
     public void setType(int i) {

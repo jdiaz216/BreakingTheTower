@@ -30,8 +30,8 @@ public class Island implements Serializable {
     private static final int TREE_GROWTH_VARIANCE = 16 * Tree.GROW_SPEED;
     private static final int INITIAL_RANDOM_SEED = 8844;
 
-    private final PrincipalComponent tower;
-    private final BufferedImage image;
+    private final transient PrincipalComponent tower;
+    private final transient BufferedImage image;
     private final int[] pixels;
 
     private List<Entity> entities = new ArrayList<>();

@@ -90,64 +90,85 @@ public class House extends Entity {
 
     public void tick() {
         if (buildTime < buildDuration) {
-            for (int i = 0; i < 2; i++) {
-                Peon peon = getRandomPeon(100, 80, true);
-                if (peon != null && peon.job == null) {
-                    peon.setJob(new Job.Build(this));
-                }
-            }
+            askPeonToBuild();
         } else {
-            if (hp < maxHp && random.nextInt(4) == 0) {
-                hp++;
-            }
+            increaseHp();
+            askPeonToWork();
+            askPeonToGoGuardPost();
+            askPeonToGoBarracks();
+            createPeon();
+        }
+    }
 
-            Peon peon = getRandomPeon(50, 50, true);
+    private void createPeon() {
+        if (type == HouseType.RESIDENCE && island.getPopulation() < island.getPopulationCap() && island.getResources().getFood() >= FOOD_PER_PEON && random.nextInt(20) == 0) {
+            double xt = x + (random.nextDouble() * 2 - 1) * 9;
+            double yt = y + (random.nextDouble() * 2 - 1) * 9;
+
+            Peon peon = new Peon(xt, yt, 0);
+            if (island.isFree(peon.getX(), peon.getY(), peon.getR())) {
+                puff();
+                island.getResources().decreaseFood(FOOD_PER_PEON);
+                island.addEntity(peon);
+                Sounds.play(new Sound.Spawn());
+            }
+        }
+    }
+
+    private void askPeonToGoBarracks() {
+        if (type == HouseType.BARRACKS && island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= WOOD_PER_WARRIOR) {
+            Peon peon = getRandomPeon(80, 80, true);
             if (peon != null && peon.job == null && peon.getType() == 0) {
-                TargetFilter noMobFilter = new TargetFilter() {
-                    public boolean accepts(Entity e) {
-                        return !(e instanceof Peon || e instanceof Monster);
-                    }
-                };
-                if (type == HouseType.MASON) {
-                    peon.setJob(new Job.Gather(Resources.RESOURCE_ROCK_ID, this));
-                } else if (type == HouseType.WOODCUTTER) {
-                    peon.setJob(new Job.Gather(Resources.RESOURCE_WOOD_ID, this));
-                } else if (type == HouseType.WINDMILL) {
-                    peon.setJob(new Job.Gather(Resources.RESOURCE_FOOD_ID, this));
-                } else if (type == HouseType.PLANTER) {
-                    if (getRandomTarget(6, 40, noMobFilter) == null)
-                        peon.setJob(new Job.Plant(this, 0));
-                } else if (type == HouseType.FARM) {
-                    if (getRandomTarget(6, 40, noMobFilter) == null)
-                        peon.setJob(new Job.Plant(this, 1));
-                }
+                peon.setJob(new Job.GotoAndConvert(this));
             }
+        }
+    }
 
-            if (type == HouseType.GUARDPOST) {
-                peon = getRandomPeon(80, 80, true);
-                if (peon != null && peon.job == null && (peon.getType() == 0 && random.nextInt(2) == 0)) {
-                    peon.setJob(new Job.Goto(this));
-                }
+    private void askPeonToGoGuardPost() {
+        if (type == HouseType.GUARDPOST) {
+            Peon peon = getRandomPeon(80, 80, true);
+            if (peon != null && peon.job == null && (peon.getType() == 0 && random.nextInt(2) == 0)) {
+                peon.setJob(new Job.Goto(this));
             }
+        }
+    }
 
-            if (type == HouseType.BARRACKS && island.getWarriorPopulation() < island.getWarriorPopulationCap() && island.getResources().getWood() >= WOOD_PER_WARRIOR) {
-                peon = getRandomPeon(80, 80, true);
-                if (peon != null && peon.job == null && peon.getType() == 0) {
-                    peon.setJob(new Job.GotoAndConvert(this));
+    private void askPeonToWork() {
+
+        Peon peon = getRandomPeon(50, 50, true);
+        if (peon != null && peon.job == null && peon.getType() == 0) {
+            TargetFilter noMobFilter = new TargetFilter() {
+                public boolean accepts(Entity e) {
+                    return !(e instanceof Peon || e instanceof Monster);
                 }
+            };
+            if (type == HouseType.MASON) {
+                peon.setJob(new Job.Gather(Resources.RESOURCE_ROCK_ID, this));
+            } else if (type == HouseType.WOODCUTTER) {
+                peon.setJob(new Job.Gather(Resources.RESOURCE_WOOD_ID, this));
+            } else if (type == HouseType.WINDMILL) {
+                peon.setJob(new Job.Gather(Resources.RESOURCE_FOOD_ID, this));
+            } else if (type == HouseType.PLANTER) {
+                if (getRandomTarget(6, 40, noMobFilter) == null)
+                    peon.setJob(new Job.Plant(this, 0));
+            } else if (type == HouseType.FARM) {
+                if (getRandomTarget(6, 40, noMobFilter) == null)
+                    peon.setJob(new Job.Plant(this, 1));
             }
+        }
+    }
 
-            if (type == HouseType.RESIDENCE && island.getPopulation() < island.getPopulationCap() && island.getResources().getFood() >= FOOD_PER_PEON && random.nextInt(20) == 0) {
-                double xt = x + (random.nextDouble() * 2 - 1) * 9;
-                double yt = y + (random.nextDouble() * 2 - 1) * 9;
+    private void increaseHp() {
+        if (hp < maxHp && random.nextInt(4) == 0) {
+            hp++;
+        }
+    }
 
-                peon = new Peon(xt, yt, 0);
-                if (island.isFree(peon.getX(), peon.getY(), peon.getR())) {
-                    puff();
-                    island.getResources().decreaseFood(FOOD_PER_PEON);
-                    island.addEntity(peon);
-                    Sounds.play(new Sound.Spawn());
-                }
+    private void askPeonToBuild() {
+        for (int i = 0; i < 2; i++) {
+            Peon peon = getRandomPeon(100, 80, true);
+            if (peon != null && peon.job == null) {
+                peon.setJob(new Job.Build(this));
             }
         }
     }

@@ -29,8 +29,8 @@ public class Monster extends Entity {
 
     public Monster(double x, double y) {
         super(x, y, 2);
-        rotation = random.nextDouble() * Math.PI * 2;
-        moveTick = random.nextInt(4 * 3);
+        Monster.rotation = random.nextDouble() * Math.PI * 2;
+        Monster.moveTick = random.nextInt(4 * 3);
     }
 
     public void init(Island island, Bitmaps bitmaps) {
@@ -40,7 +40,7 @@ public class Monster extends Entity {
 
     public void die() {
         Sounds.play(new Sound.MonsterDeath());
-        island.decreaseMonsterPopulation();
+        Entity.island.decreaseMonsterPopulation();
         alive = false;
     }
 
@@ -83,16 +83,16 @@ public class Monster extends Entity {
                 speed = 0;
                 target.fight(this);
             }
-            rotation = Math.atan2(yd, xd);
+            Monster.rotation = Math.atan2(yd, xd);
         } else {
-            rotation += (random.nextDouble() - 0.5) * random.nextDouble();
+            Monster.rotation += (random.nextDouble() - 0.5) * random.nextDouble();
         }
 
         if (wanderTime > 0) wanderTime--;
 
         double xt = x + Math.cos(rotation) * MOVEMENT_SPEED * speed;
         double yt = y + Math.sin(rotation) * MOVEMENT_SPEED * speed;
-        if (island.isFree(xt, yt, r, this)) {
+        if (Entity.island.isFree(xt, yt, r, this)) {
             x = xt;
             y = yt;
         } else {
@@ -103,7 +103,7 @@ public class Monster extends Entity {
     }
 
     private void handleObstacle() {
-        rotation += random.nextInt(2) * 2 - 1 * Math.PI / 2 + (random.nextDouble() - 0.5);
+        Monster.rotation += random.nextInt(2) * 2 - 1 * Math.PI / 2 + (random.nextDouble() - 0.5);
         wanderTime = random.nextInt(WANDER_TIME_MAX);
     }
 
@@ -119,7 +119,7 @@ public class Monster extends Entity {
     }
 
     protected static int getRotationStep() {
-        return (int) Math.floor((rotation - island.getRot()) * 4 / (Math.PI * 2) + 0.5);
+        return (int) Math.floor((Monster.rotation - Entity.island.getRot()) * 4 / (Math.PI * 2) + 0.5);
     }
 
     protected static int getAnimationStep() {

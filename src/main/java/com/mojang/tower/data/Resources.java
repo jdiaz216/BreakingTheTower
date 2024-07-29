@@ -1,7 +1,9 @@
 package com.mojang.tower.data;
 
-public class Resources
-{
+import java.io.Serializable;
+
+public class Resources implements Serializable {
+
     public static final int RESOURCE_WOOD_ID = 0;
     public static final int RESOURCE_ROCK_ID = 1;
     public static final int RESOURCE_FOOD_ID = 2;
@@ -17,6 +19,7 @@ public class Resources
             case RESOURCE_WOOD_ID: wood+=count; break;
             case RESOURCE_ROCK_ID: rock+=count; break;
             case RESOURCE_FOOD_ID: food+=count; break;
+            default: // no resource need to be added
         }
     }
 

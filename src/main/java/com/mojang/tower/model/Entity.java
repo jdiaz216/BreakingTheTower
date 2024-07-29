@@ -3,12 +3,13 @@ package com.mojang.tower.model;
 import com.mojang.tower.data.Bitmaps;
 
 import java.awt.Graphics2D;
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Represents an entity in the game with position and collision properties.
  */
-public class Entity implements Comparable<Entity> {
+public class Entity implements Comparable<Entity>, Serializable {
     protected double x, y, r;
     protected double xr, yr;
 
@@ -30,7 +31,7 @@ public class Entity implements Comparable<Entity> {
     }
 
     public void init(Island island, Bitmaps bitmaps) {
-        this.island = island;
+        Entity.island = island;
         this.bitmaps = bitmaps;
     }
 

@@ -47,10 +47,10 @@ public class Job {
     }
 
     public static class Hunt extends Job {
-        private Monster target;
+        private Monster huntTarget;
 
         public Hunt(Monster target) {
-            this.target = target;
+            this.huntTarget = target;
             bonusRadius = 5;
         }
 
@@ -59,24 +59,24 @@ public class Job {
         }
 
         public void arrived() {
-            target.fight(peon);
+            huntTarget.fight(peon);
         }
     }
 
 
     public static class Build extends Job {
-        private House target;
+        private House buildTarget;
 
         public Build(House target) {
-            this.target = target;
+            this.buildTarget = target;
         }
 
         public boolean isValidTarget(Entity e) {
-            return e == target;
+            return e == buildTarget;
         }
 
         public void arrived() {
-            if (target.build()) peon.setJob(null);
+            if (buildTarget.build()) peon.setJob(null);
         }
     }
 
@@ -176,7 +176,9 @@ public class Job {
 
     protected Peon peon;
     protected Island island;
-    private double xTarget, yTarget, targetDistance;
+    private double xTarget;
+    private double yTarget;
+    private double targetDistance;
     protected Entity target;
     protected int bonusRadius = 2;
     protected int boreTime = 500;
@@ -217,6 +219,7 @@ public class Job {
     }
 
     public void arrived() {
+        // no implementation yet
     }
 
     public void cantReach() {
