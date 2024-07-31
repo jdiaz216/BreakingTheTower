@@ -31,8 +31,12 @@ public class Entity implements Comparable<Entity>, Serializable {
     }
 
     public void init(Island island, Bitmaps bitmaps) {
-        Entity.island = island;
+        setIsland(island);
         this.bitmaps = bitmaps;
+    }
+
+    private static synchronized void setIsland(Island value) {
+        island = value;
     }
 
     public void tick() {

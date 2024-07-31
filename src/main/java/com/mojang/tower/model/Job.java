@@ -3,9 +3,10 @@ package com.mojang.tower.model;
 import com.mojang.tower.sound.Sound;
 import com.mojang.tower.sound.Sounds;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Job {
+public class Job implements Serializable {
     protected Random random = new Random();
 
     public static class Goto extends Job {

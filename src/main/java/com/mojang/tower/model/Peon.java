@@ -69,23 +69,11 @@ public class Peon extends Entity {
             job.tick();
         }
 
-        if (type == TYPE_WARRIOR || job == null) {
-            for (int i = 0; i < 15 && (job == null || job instanceof Job.Goto); i++) {
-                TargetFilter monsterFilter = new TargetFilter() {
-                    public boolean accepts(Entity e) {
-                        return e.isAlive() && (e instanceof Monster);
-                    }
-                };
-                Entity e = type == TYPE_REGULAR ? getRandomTarget(30, 15, monsterFilter) : getRandomTarget(70, 80, monsterFilter);
-                if (e instanceof Monster) {
-                    setJob(new Job.Hunt((Monster) e));
-                }
-            }
-        }
-
+        askPeonToGo();
         increaseHp();
 
         double speed = 1;
+
         if (wanderTime == 0 && job != null && job.hasTarget()) {
             double xd = job.getxTarget() - x;
             double yd = job.getyTarget() - y;
@@ -123,6 +111,22 @@ public class Peon extends Entity {
 
         moveTick += speed;
         super.tick();
+    }
+
+    private void askPeonToGo() {
+        if (type == TYPE_WARRIOR || job == null) {
+            for (int i = 0; i < 15 && (job == null || job instanceof Job.Goto); i++) {
+                TargetFilter monsterFilter = new TargetFilter() {
+                    public boolean accepts(Entity e) {
+                        return e.isAlive() && (e instanceof Monster);
+                    }
+                };
+                Entity e = type == TYPE_REGULAR ? getRandomTarget(30, 15, monsterFilter) : getRandomTarget(70, 80, monsterFilter);
+                if (e instanceof Monster) {
+                    setJob(new Job.Hunt((Monster) e));
+                }
+            }
+        }
     }
 
     private void increaseHp() {

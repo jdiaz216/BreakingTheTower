@@ -1,8 +1,9 @@
 package com.mojang.tower.data;
 
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class HouseType {
+public class HouseType implements Serializable {
     public static final HouseType[] houseTypes = new HouseType[8];
 
     public static final HouseType MASON = new HouseType(1, "Mason", 10, 0, 15, 0).setAcceptsResource(Resources.RESOURCE_ROCK_ID);

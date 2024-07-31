@@ -8,16 +8,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 public class Monster extends Entity {
+
     private static final int[] ANIM_STEPS = {0, 1, 0, 2};
     private static final int[] ANIM_DIRS = {2, 0, 3, 1};
-
-
     private static final double MOVEMENT_SPEED = 0.3;
-
     private static final int HP_REGEN_INTERVAL = 16;
-
     private static final int RANDOM_TARGET_CHANCE = 100;
-
     private static final int WANDER_TIME_MAX = 30;
     private static double rotation = 0;
     private static double moveTick = 0;
@@ -29,8 +25,20 @@ public class Monster extends Entity {
 
     public Monster(double x, double y) {
         super(x, y, 2);
-        Monster.rotation = random.nextDouble() * Math.PI * 2;
-        Monster.moveTick = random.nextInt(4 * 3);
+        rotation = random.nextDouble() * Math.PI * 2;
+        moveTick = random.nextInt(4 * 3);
+    }
+
+    private synchronized static void setRotation(double value) {
+        rotation = value;
+    }
+
+    private synchronized static void increaseRotation(double value) {
+        rotation += value;
+    }
+
+    private synchronized static void increaseMoveTick(double value) {
+        moveTick += value;
     }
 
     public void init(Island island, Bitmaps bitmaps) {
@@ -83,9 +91,9 @@ public class Monster extends Entity {
                 speed = 0;
                 target.fight(this);
             }
-            Monster.rotation = Math.atan2(yd, xd);
+            setRotation(Math.atan2(yd, xd));
         } else {
-            Monster.rotation += (random.nextDouble() - 0.5) * random.nextDouble();
+            increaseRotation((random.nextDouble() - 0.5) * random.nextDouble());
         }
 
         if (wanderTime > 0) wanderTime--;
@@ -99,11 +107,11 @@ public class Monster extends Entity {
             handleObstacle();
         }
 
-        moveTick += speed;
+        increaseMoveTick(speed);
     }
 
     private void handleObstacle() {
-        Monster.rotation += random.nextInt(2) * 2 - 1 * Math.PI / 2 + (random.nextDouble() - 0.5);
+        increaseRotation(random.nextInt(2) * 2 - 1 * Math.PI / 2 + (random.nextDouble() - 0.5));
         wanderTime = random.nextInt(WANDER_TIME_MAX);
     }
 
